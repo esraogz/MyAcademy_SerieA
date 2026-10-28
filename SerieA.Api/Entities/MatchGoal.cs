@@ -14,6 +14,5 @@
 
         //Navigation Property
         public Match Match { get; set; }
-        public Team Team { get; set; }
     }
 }

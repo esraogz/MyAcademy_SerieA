@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Routing;
-
-namespace SerieA.Api.Entities
+﻿namespace SerieA.Api.Entities
 {
     public class MatchCard
     {
@@ -15,6 +13,5 @@ namespace SerieA.Api.Entities
 
         //Navigation Property
         public Match Match { get; set; }
-        public Team Team { get; set; }
     }
 }

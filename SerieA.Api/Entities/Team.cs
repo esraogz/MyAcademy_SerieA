@@ -12,7 +12,7 @@
         public int Founded { get; set; }  //Kuruluş Yılı
         public string ColorA { get; set; }
         public string ColorB { get; set; }
-        public string LogoUrl { get; set; }
+        public string? LogoUrl { get; set; }
         public bool IsActive { get; set; }
 
 

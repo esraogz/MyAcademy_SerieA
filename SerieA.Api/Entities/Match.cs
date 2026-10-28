@@ -1,4 +1,6 @@
-﻿namespace SerieA.Api.Entities
+﻿using SerieA.WebApi.Entities;
+
+namespace SerieA.Api.Entities
 {
     public class Match
     {
@@ -12,7 +14,7 @@
         public int? HalfTimeHomeScore { get; set; }
         public int? HalfTimeAwayScore { get; set; }
         public string Status { get; set; }
-        public string LiveMinute { get; set; }
+        public string? LiveMinute { get; set; }
         public string? PostponedNote { get; set; }
         public bool IsFeatured { get; set; }
         public string? Referee { get; set; }  //Hakem
@@ -27,10 +29,11 @@
         public List<MatchCard> MatchCards { get; set; }
         public List<MatchGoal> MatchGoals { get; set; }
         public List<MatchSubstitution> MatchSubstitutions { get; set; }
+        public MatchStatistic? MatchStatistic { get; set; }  //İstatistik özeti her maçta 1 tane. O yüzden List şeklinde tutmuyoruz.
 
 
 
-        
+
 
 
     }

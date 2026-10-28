@@ -1,8 +1,12 @@
-﻿namespace SerieA.WebApi.Entities
+﻿using SerieA.Api.Entities;
+
+namespace SerieA.WebApi.Entities
 {
     public class MatchStatistic
     {
         public int Id { get; set; }
+        public int MatchId { get; set; }
+        public Match Match { get; set; }
         public string HomePossession { get; set; }
         public string AwayPossession { get; set; }
         public int HomeShots { get; set; }

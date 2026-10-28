@@ -55,7 +55,6 @@ namespace SerieA.WebApi.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("LiveMinute")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("MatchDate")
@@ -126,8 +125,6 @@ namespace SerieA.WebApi.Migrations
 
                     b.HasIndex("MatchId");
 
-                    b.HasIndex("TeamId");
-
                     b.ToTable("MatchCards");
                 });
 
@@ -165,8 +162,6 @@ namespace SerieA.WebApi.Migrations
 
                     b.HasIndex("MatchId");
 
-                    b.HasIndex("TeamId");
-
                     b.ToTable("MatchGoals");
                 });
 
@@ -202,8 +197,6 @@ namespace SerieA.WebApi.Migrations
 
                     b.HasIndex("MatchId");
 
-                    b.HasIndex("TeamId");
-
                     b.ToTable("MatchSubstitutions");
                 });
 
@@ -237,7 +230,6 @@ namespace SerieA.WebApi.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("LogoUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -321,7 +313,13 @@ namespace SerieA.WebApi.Migrations
                     b.Property<int>("HomeShotsOnTarget")
                         .HasColumnType("int");
 
+                    b.Property<int>("MatchId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("MatchId")
+                        .IsUnique();
 
                     b.ToTable("MatchStatistics");
                 });
@@ -353,15 +351,7 @@ namespace SerieA.WebApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SerieA.Api.Entities.Team", "Team")
-                        .WithMany()
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Match");
-
-                    b.Navigation("Team");
                 });
 
             modelBuilder.Entity("SerieA.Api.Entities.MatchGoal", b =>
@@ -372,15 +362,7 @@ namespace SerieA.WebApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SerieA.Api.Entities.Team", "Team")
-                        .WithMany()
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Match");
-
-                    b.Navigation("Team");
                 });
 
             modelBuilder.Entity("SerieA.Api.Entities.MatchSubstitution", b =>
@@ -391,15 +373,18 @@ namespace SerieA.WebApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SerieA.Api.Entities.Team", "Team")
-                        .WithMany()
-                        .HasForeignKey("TeamId")
+                    b.Navigation("Match");
+                });
+
+            modelBuilder.Entity("SerieA.WebApi.Entities.MatchStatistic", b =>
+                {
+                    b.HasOne("SerieA.Api.Entities.Match", "Match")
+                        .WithOne("MatchStatistic")
+                        .HasForeignKey("SerieA.WebApi.Entities.MatchStatistic", "MatchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Match");
-
-                    b.Navigation("Team");
                 });
 
             modelBuilder.Entity("SerieA.Api.Entities.Match", b =>
@@ -407,6 +392,8 @@ namespace SerieA.WebApi.Migrations
                     b.Navigation("MatchCards");
 
                     b.Navigation("MatchGoals");
+
+                    b.Navigation("MatchStatistic");
 
                     b.Navigation("MatchSubstitutions");
                 });
