@@ -1,0 +1,348 @@
+﻿@model List<ResultTeamDto>
+@{
+    ViewData["Title"] = "ListTeam";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    int count = 0;
+}
+
+<!-- 1. SAYFA BAŞLIĞI VE YENİ TAKIM EKLE BUTONU -->
+<div class="page-head">
+    <div>
+        <span class="page-eyebrow">Serie A 2026/27</span>
+        <h1 class="page-title">Takım Yönetimi</h1>
+        <p class="page-desc">Serie A kulüplerini görüntüleyebilir, ekleyebilir, düzenleyebilir ve silebilirsiniz.</p>
+    </div>
+    <button type="button" class="btn-a btn-a--primary" onclick="document.getElementById('create-modal').showModal()">
+        <svg class="icon" aria-hidden="true"><use href="#i-plus" /></svg>Yeni Takım Ekle
+    </button>
+</div>
+
+<!-- 2. LİG ÖZETİ ŞERİDİ (Buradaki sabit sayıları LINQ ile dinamikleştireceksin) -->
+<section class="league-strip" aria-label="Lig özeti">
+    <div class="strip-item strip-item--green">
+        <span class="strip-icon"><svg class="icon"><use href="#i-shield" /></svg></span>
+        <div>
+            <span class="strip-label">Aktif takım</span>
+            <span class="strip-value">20 <small>/ 20</small></span>
+        </div>
+    </div>
+    <div class="strip-item strip-item--blue">
+        <span class="strip-icon"><svg class="icon"><use href="#i-pin" /></svg></span>
+        <div>
+            <span class="strip-label">Temsil edilen şehir</span>
+            <span class="strip-value">16</span>
+        </div>
+    </div>
+    <div class="strip-item strip-item--navy">
+        <span class="strip-icon"><svg class="icon"><use href="#i-stadium" /></svg></span>
+        <div>
+            <span class="strip-label">Toplam stadyum kapasitesi</span>
+            <span class="strip-value">650.000</span>
+        </div>
+    </div>
+    <div class="strip-item strip-item--red">
+        <span class="strip-icon"><svg class="icon"><use href="#i-clock" /></svg></span>
+        <div>
+            <span class="strip-label">En köklü kulüp</span>
+            <span class="strip-value">Genoa <small>1893</small></span>
+        </div>
+    </div>
+</section>
+
+<!-- 3. FİLTRE VE TAKIM TABLOSU -->
+<section class="card-a" aria-label="Takım listesi">
+    <div class="filter-bar">
+        <div class="filter-search">
+            <label class="field-label" for="f-q">Takım Ara</label>
+            <div class="input-icon">
+                <svg class="icon" aria-hidden="true"><use href="#i-search" /></svg>
+                <input class="input-a" id="f-q" type="search" placeholder="Takım, şehir veya stadyum">
+            </div>
+        </div>
+        <div>
+            <label class="field-label" for="f-region">Bölge</label>
+            <select class="select-a" id="f-region">
+                <option value="">Tüm Bölgeler</option>
+                <option value="Kuzey İtalya">Kuzey İtalya</option>
+                <option value="Orta İtalya">Orta İtalya</option>
+                <option value="Güney İtalya">Güney İtalya</option>
+                <option value="Adalar">Adalar</option>
+            </select>
+        </div>
+        @* Aktif/Pasif Filtreleme *@
+        <div>
+            <label class="field-label" for="f-status">Durum</label>
+            <select class="select-a" id="f-status">
+                <option value="">Tümü</option>
+                <option value="active">Aktif (Serie A)</option>
+                <option value="inactive">Pasif</option>
+            </select>
+        </div>
+        <div class="filter-actions">
+            <button type="button" class="btn-a btn-a--ghost">Temizle</button>
+            <button type="button" class="btn-a btn-a--secondary">Filtrele</button>
+        </div>
+    </div>
+
+    <div class="table-scroll">
+        <table class="team-table">
+            <thead>
+                <tr>
+                    <th scope="col" class="col-id">ID</th>
+                    <th scope="col">Takım</th>
+                    <th scope="col">Şehir / Bölge</th>
+                    <th scope="col">Stadyum</th>
+                    <th scope="col" class="col-num">Kapasite</th>
+                    <th scope="col" class="col-num">Kuruluş</th>
+                    <th scope="col">Renkler</th>
+                    <th scope="col">Durum</th>
+                    <th scope="col" class="col-actions">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    count++;
+                    <tr>
+                        <td class="col-id">@count</td>
+                        <td>
+                            <div class="team-cell">
+                                @if (!string.IsNullOrEmpty(item.LogoUrl))
+                                {
+                                    <img class="team-crest" src="@item.LogoUrl" alt="@item.Name" />
+                                }
+                                else
+                                {
+                                    <span class="team-crest" style="--crest-a:@item.ColorA; --crest-b:@item.ColorB; --crest-ink:#FFFFFF;">
+                                        @item.ShortName
+                                    </span>
+                                }
+                                <div>
+                                    <span class="team-name">@item.Name</span>
+                                    <span class="team-code">@item.ShortName</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="city-cell">
+                            @item.City
+                            <small><span class="region region--north">@item.Region</span></small>
+                        </td>
+                        <td>@item.Stadium</td>
+                        <td class="col-num">@item.Capacity</td>
+                        <td class="col-num">@item.Founded</td>
+                        <td>
+                            <span class="swatches">
+                                <span class="swatch" style="--c:@item.ColorA"></span>
+                                <span class="swatch" style="--c:@item.ColorB"></span>
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge-a badge-a--active">@item.IsActive</span>
+                        </td>
+                        <td class="col-actions">
+                            <div class="row-actions">
+                                <!-- Düzenle Popup Açma Butonu (data-* içine item değerlerini vereceksin) -->
+                                <button type="button" class="act-btn" title="Düzenle"
+                                        data-id="@item.TeamId"
+                                        data-name="@item.Name"
+                                        data-shortname="@item.ShortName"
+                                        data-city="@item.City"
+                                        data-region="@item.Region"
+                                        data-stadium="@item.Stadium"
+                                        data-capacity="@item.Capacity"
+                                        data-founded="@item.Founded"
+                                        data-colora="@item.ColorA"
+                                        data-colorb="@item.ColorB"
+                                        data-isactive="@item.IsActive"
+                                        onclick="openUpdateModal(this)">
+                                    <svg class="icon"><use href="#i-edit" /></svg>
+                                </button>
+
+                                <!-- Silme Linki -->
+                                <a href="/Admin/Team/DeleteTeam/@item.TeamId" class="act-btn act-btn--danger" title="Sil">
+                                    <svg class="icon"><use href="#i-trash" /></svg>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="table-foot">
+        <span>Toplam 22 takım gösteriliyor</span>
+        <span>Serie A'da en fazla 20 aktif takım bulunabilir</span>
+    </div>
+</section>
+
+<!-- ========================================================= -->
+@* <!-- POPUP 1: YENİ TAKIM EKLEME MODALI --> *@
+<!-- ========================================================= -->
+<dialog class="modal-a" id="create-modal">
+    <form asp-area="Admin" asp-controller="Team" asp-action="CreateTeam" method="post">
+        <div class="modal-head">
+            <h2 class="modal-title">Yeni Takım Ekle</h2>
+            <button type="button" class="icon-btn" onclick="document.getElementById('create-modal').close()">
+                <svg class="icon"><use href="#i-x" /></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="form-field">
+                    <label class="field-label">Takım Adı <span class="req">*</span></label>
+                    <input class="input-a" name="Name" type="text" maxlength="40" placeholder="Örn. Sampdoria" required>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">Kısa Ad <span class="req">*</span></label>
+                    <input class="input-a code-input" name="ShortName" type="text" maxlength="3" placeholder="SAM" required>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">Şehir <span class="req">*</span></label>
+                    <input class="input-a" name="City" type="text" placeholder="Örn. Genova" required>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">Bölge <span class="req">*</span></label>
+                    <select class="select-a" name="Region" required>
+                        <option value="Kuzey İtalya">Kuzey İtalya</option>
+                        <option value="Orta İtalya">Orta İtalya</option>
+                        <option value="Güney İtalya">Güney İtalya</option>
+                        <option value="Adalar">Adalar</option>
+                    </select>
+                </div>
+                <div class="form-field span-2">
+                    <label class="field-label">Stadyum <span class="req">*</span></label>
+                    <input class="input-a" name="Stadium" type="text" placeholder="Örn. Stadio Luigi Ferraris" required>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">Stadyum Kapasitesi <span class="req">*</span></label>
+                    <input class="input-a" name="Capacity" type="number" min="1000" max="100000" placeholder="Örn. 36599" required>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">Kuruluş Yılı <span class="req">*</span></label>
+                    <input class="input-a" name="Founded" type="number" min="1850" max="2026" placeholder="Örn. 1946" required>
+                </div>
+                <div class="form-field span-2">
+                    <span class="field-label">Kulüp Renkleri <span class="req">*</span></span>
+                    <div class="color-row">
+                        <label class="color-input">
+                            <input type="color" name="ColorA" value="#1E5BD8">
+                            <span>Ana renk</span>
+                        </label>
+                        <label class="color-input">
+                            <input type="color" name="ColorB" value="#FFFFFF">
+                            <span>İkinci renk</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-field span-2">
+                    <label class="field-label">Durum</label>
+                    <select class="select-a" name="IsActive">
+                        <option value="true">Aktif (Serie A'da oynuyor)</option>
+                        <option value="false">Pasif</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-foot">
+            <button type="button" class="btn-a btn-a--secondary" onclick="document.getElementById('create-modal').close()">Vazgeç</button>
+            <button type="submit" class="btn-a btn-a--primary">Kaydet</button>
+        </div>
+    </form>
+</dialog>
+
+<!-- ========================================================= -->
+<!-- POPUP 2: TAKIM GÜNCELLEME MODALI -->
+<!-- ========================================================= -->
+<dialog class="modal-a" id="update-modal">
+    <form asp-area="Admin" asp-controller="Team" asp-action="UpdateTeam" method="post">
+        <div class="modal-head">
+            <h2 class="modal-title">Takımı Düzenle</h2>
+            <button type="button" class="icon-btn" onclick="document.getElementById('update-modal').close()">
+                <svg class="icon"><use href="#i-x" /></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" name="TeamId" id="u-id">
+
+            <div class="form-grid">
+                <div class="form-field">
+                    <label class="field-label">Takım Adı <span class="req">*</span></label>
+                    <input class="input-a" name="Name" id="u-name" type="text" maxlength="40" required>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">Kısa Ad <span class="req">*</span></label>
+                    <input class="input-a code-input" name="ShortName" id="u-shortname" type="text" maxlength="3" required>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">Şehir <span class="req">*</span></label>
+                    <input class="input-a" name="City" id="u-city" type="text" required>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">Bölge <span class="req">*</span></label>
+                    <select class="select-a" name="Region" id="u-region" required>
+                        <option value="Kuzey İtalya">Kuzey İtalya</option>
+                        <option value="Orta İtalya">Orta İtalya</option>
+                        <option value="Güney İtalya">Güney İtalya</option>
+                        <option value="Adalar">Adalar</option>
+                    </select>
+                </div>
+                <div class="form-field span-2">
+                    <label class="field-label">Stadyum <span class="req">*</span></label>
+                    <input class="input-a" name="Stadium" id="u-stadium" type="text" required>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">Stadyum Kapasitesi <span class="req">*</span></label>
+                    <input class="input-a" name="Capacity" id="u-capacity" type="number" min="1000" max="100000" required>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">Kuruluş Yılı <span class="req">*</span></label>
+                    <input class="input-a" name="Founded" id="u-founded" type="number" min="1850" max="2026" required>
+                </div>
+                <div class="form-field span-2">
+                    <span class="field-label">Kulüp Renkleri <span class="req">*</span></span>
+                    <div class="color-row">
+                        <label class="color-input">
+                            <input type="color" name="ColorA" id="u-colora">
+                            <span>Ana renk</span>
+                        </label>
+                        <label class="color-input">
+                            <input type="color" name="ColorB" id="u-colorb">
+                            <span>İkinci renk</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-field span-2">
+                    <label class="field-label">Durum</label>
+                    <select class="select-a" name="IsActive" id="u-isactive">
+                        <option value="true">Aktif (Serie A'da oynuyor)</option>
+                        <option value="false">Pasif</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-foot">
+            <button type="button" class="btn-a btn-a--secondary" onclick="document.getElementById('update-modal').close()">Vazgeç</button>
+            <button type="submit" class="btn-a btn-a--primary">Güncelle</button>
+        </div>
+    </form>
+</dialog>
+
+<script>
+    // Düzenle butonuna basıldığında satırdaki verileri Güncelleme Popup'ına dolduran minik fonksiyon:
+    function openUpdateModal(btn) {
+        document.getElementById('u-id').value = btn.dataset.id;
+        document.getElementById('u-name').value = btn.dataset.name;
+        document.getElementById('u-shortname').value = btn.dataset.shortname;
+        document.getElementById('u-city').value = btn.dataset.city;
+        document.getElementById('u-region').value = btn.dataset.region;
+        document.getElementById('u-stadium').value = btn.dataset.stadium;
+        document.getElementById('u-capacity').value = btn.dataset.capacity;
+        document.getElementById('u-founded').value = btn.dataset.founded;
+        document.getElementById('u-colora').value = btn.dataset.colora;
+        document.getElementById('u-colorb').value = btn.dataset.colorb;
+        document.getElementById('u-isactive').value = btn.dataset.isactive;
+
+        document.getElementById('update-modal').showModal();
+    }
+</script>
+

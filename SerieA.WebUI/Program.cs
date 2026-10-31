@@ -1,7 +1,17 @@
+using SerieA.WebUI.Options;
+using SerieA.WebUI.Services.TeamServices;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+var apiOptions = builder.Configuration.GetSection(nameof(ApiOptions)).Get<ApiOptions>(); //1.ApiOptions => appsettings.json'dan gelen
+                                                                                         //2.ApiOptions => Bizim oluþturduðumuz ApiOptions sýnýfý
+builder.Services.AddHttpClient<ITeamService, TeamService>(options =>
+{
+    options.BaseAddress = new Uri(apiOptions.BaseUrl);
+});
 
 var app = builder.Build();
 
@@ -19,7 +29,9 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
-
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
