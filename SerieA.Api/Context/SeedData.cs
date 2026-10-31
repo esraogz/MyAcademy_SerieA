@@ -14,36 +14,51 @@ namespace SerieA.WebApi.Context
             // =========================================================================
             // 1. ADIM: TAKIMLAR (20 Aktif Serie A Kulübü + 2 Pasif Kulüp)
             // =========================================================================
+            var seedTeams = new List<Team>
+            {
+                new Team { Name = "Atalanta",    ShortName = "ATA", City = "Bergamo",   Region = "Kuzey İtalya", Stadium = "Gewiss Stadium",                Capacity = 24950, Founded = 1907, ColorA = "#1E6FB8", ColorB = "#111111", LogoUrl = "https://raw.githubusercontent.com/JoseArroyave/football-logos/refs/heads/main/logos/italy/Atalanta.svg",    IsActive = true },
+                new Team { Name = "Bologna",     ShortName = "BOL", City = "Bologna",   Region = "Kuzey İtalya", Stadium = "Stadio Renato Dall'Ara",        Capacity = 36462, Founded = 1909, ColorA = "#1A2F5A", ColorB = "#A21C26", LogoUrl = "https://raw.githubusercontent.com/JoseArroyave/football-logos/refs/heads/main/logos/italy/Bologna.svg",     IsActive = true },
+                new Team { Name = "Cagliari",    ShortName = "CAG", City = "Cagliari",  Region = "Adalar",       Stadium = "Unipol Domus",                  Capacity = 16416, Founded = 1920, ColorA = "#A5162B", ColorB = "#0E2A56", LogoUrl = "https://raw.githubusercontent.com/JoseArroyave/football-logos/refs/heads/main/logos/italy/Cagliari.svg",    IsActive = true },
+                new Team { Name = "Como",        ShortName = "COM", City = "Como",      Region = "Kuzey İtalya", Stadium = "Stadio Giuseppe Sinigaglia",    Capacity = 13602, Founded = 1907, ColorA = "#0B3E91", ColorB = "#FFFFFF", LogoUrl = "https://raw.githubusercontent.com/JoseArroyave/football-logos/refs/heads/main/logos/italy/Como_1907.svg",  IsActive = true },
+                new Team { Name = "Fiorentina",  ShortName = "FIO", City = "Firenze",   Region = "Orta İtalya",  Stadium = "Stadio Artemio Franchi",        Capacity = 43147, Founded = 1926, ColorA = "#5B2A86", ColorB = "#FFFFFF", LogoUrl = "https://raw.githubusercontent.com/JoseArroyave/football-logos/refs/heads/main/logos/italy/Fiorentina.svg",  IsActive = true },
+                new Team { Name = "Frosinone",   ShortName = "FRO", City = "Frosinone", Region = "Orta İtalya",  Stadium = "Stadio Benito Stirpe",          Capacity = 16227, Founded = 1928, ColorA = "#1C4E9A", ColorB = "#FFD200", LogoUrl = "https://raw.githubusercontent.com/JoseArroyave/football-logos/refs/heads/main/logos/italy/Empoli.svg",      IsActive = true },
+                new Team { Name = "Genoa",       ShortName = "GEN", City = "Genova",    Region = "Kuzey İtalya", Stadium = "Stadio Luigi Ferraris",         Capacity = 36599, Founded = 1893, ColorA = "#A2172E", ColorB = "#002B5C", LogoUrl = "https://raw.githubusercontent.com/JoseArroyave/football-logos/refs/heads/main/logos/italy/Genoa.svg",       IsActive = true },
+                new Team { Name = "Inter",       ShortName = "INT", City = "Milano",    Region = "Kuzey İtalya", Stadium = "San Siro",                      Capacity = 75817, Founded = 1908, ColorA = "#0A4FA8", ColorB = "#101418", LogoUrl = "https://raw.githubusercontent.com/JoseArroyave/football-logos/refs/heads/main/logos/italy/Inter.svg",       IsActive = true },
+                new Team { Name = "Juventus",    ShortName = "JUV", City = "Torino",    Region = "Kuzey İtalya", Stadium = "Allianz Stadium",               Capacity = 41507, Founded = 1897, ColorA = "#16181D", ColorB = "#E8E8E8", LogoUrl = "https://raw.githubusercontent.com/JoseArroyave/football-logos/refs/heads/main/logos/italy/Juventus.svg",    IsActive = true },
+                new Team { Name = "Lazio",       ShortName = "LAZ", City = "Roma",      Region = "Orta İtalya",  Stadium = "Stadio Olimpico",               Capacity = 70634, Founded = 1900, ColorA = "#8FD3F4", ColorB = "#FFFFFF", LogoUrl = "https://raw.githubusercontent.com/JoseArroyave/football-logos/refs/heads/main/logos/italy/Lazio.svg",       IsActive = true },
+                new Team { Name = "Lecce",       ShortName = "LEC", City = "Lecce",     Region = "Güney İtalya", Stadium = "Stadio Via del Mare",           Capacity = 31533, Founded = 1908, ColorA = "#F6D000", ColorB = "#D21F26", LogoUrl = "https://raw.githubusercontent.com/JoseArroyave/football-logos/refs/heads/main/logos/italy/Lecce.svg",       IsActive = true },
+                new Team { Name = "Milan",       ShortName = "MIL", City = "Milano",    Region = "Kuzey İtalya", Stadium = "San Siro",                      Capacity = 75817, Founded = 1899, ColorA = "#C8141E", ColorB = "#111111", LogoUrl = "https://raw.githubusercontent.com/JoseArroyave/football-logos/refs/heads/main/logos/italy/Milan.svg",       IsActive = true },
+                new Team { Name = "Monza",       ShortName = "MON", City = "Monza",     Region = "Kuzey İtalya", Stadium = "U-Power Stadium",               Capacity = 16917, Founded = 1912, ColorA = "#D2122E", ColorB = "#FFFFFF", LogoUrl = "https://raw.githubusercontent.com/JoseArroyave/football-logos/refs/heads/main/logos/italy/Monza.svg",       IsActive = true },
+                new Team { Name = "Napoli",      ShortName = "NAP", City = "Napoli",    Region = "Güney İtalya", Stadium = "Stadio Diego Armando Maradona", Capacity = 54726, Founded = 1926, ColorA = "#1E9BD7", ColorB = "#0C3C78", LogoUrl = "https://raw.githubusercontent.com/JoseArroyave/football-logos/refs/heads/main/logos/italy/Napoli.svg",      IsActive = true },
+                new Team { Name = "Parma",       ShortName = "PAR", City = "Parma",     Region = "Kuzey İtalya", Stadium = "Stadio Ennio Tardini",          Capacity = 22352, Founded = 1913, ColorA = "#FFD200", ColorB = "#1D3E8A", LogoUrl = "https://raw.githubusercontent.com/JoseArroyave/football-logos/refs/heads/main/logos/italy/Parma.svg",       IsActive = true },
+                new Team { Name = "Roma",        ShortName = "ROM", City = "Roma",      Region = "Orta İtalya",  Stadium = "Stadio Olimpico",               Capacity = 70634, Founded = 1927, ColorA = "#8E1F2F", ColorB = "#F0B323", LogoUrl = "https://raw.githubusercontent.com/JoseArroyave/football-logos/refs/heads/main/logos/italy/Roma.svg",        IsActive = true },
+                new Team { Name = "Sassuolo",    ShortName = "SAS", City = "Sassuolo",  Region = "Kuzey İtalya", Stadium = "Mapei Stadium",                 Capacity = 21584, Founded = 1920, ColorA = "#00A651", ColorB = "#111111", LogoUrl = "https://raw.githubusercontent.com/JoseArroyave/football-logos/refs/heads/main/logos/italy/Hellas_Verona.svg", IsActive = true },
+                new Team { Name = "Torino",      ShortName = "TOR", City = "Torino",    Region = "Kuzey İtalya", Stadium = "Stadio Olimpico Grande Torino", Capacity = 27958, Founded = 1906, ColorA = "#7E1B1B", ColorB = "#E9D9B0", LogoUrl = "https://raw.githubusercontent.com/JoseArroyave/football-logos/refs/heads/main/logos/italy/Torino.svg",      IsActive = true },
+                new Team { Name = "Udinese",     ShortName = "UDI", City = "Udine",     Region = "Kuzey İtalya", Stadium = "Bluenergy Stadium",             Capacity = 25144, Founded = 1896, ColorA = "#26282C", ColorB = "#FFFFFF", LogoUrl = "https://raw.githubusercontent.com/JoseArroyave/football-logos/refs/heads/main/logos/italy/Udinese.svg",     IsActive = true },
+                new Team { Name = "Venezia",     ShortName = "VEN", City = "Venezia",   Region = "Kuzey İtalya", Stadium = "Stadio Pier Luigi Penzo",       Capacity = 11150, Founded = 1907, ColorA = "#141414", ColorB = "#F06A1A", LogoUrl = "https://raw.githubusercontent.com/JoseArroyave/football-logos/refs/heads/main/logos/italy/Venezia.svg",     IsActive = true },
+                // Pasif Takımlar (LogoUrl = null bırakıldı ki ShortName renkli arma görünsün!)
+                new Team { Name = "Sampdoria",   ShortName = "SAM", City = "Genova",    Region = "Kuzey İtalya", Stadium = "Stadio Luigi Ferraris",         Capacity = 36599, Founded = 1946, ColorA = "#1B4FA0", ColorB = "#FFFFFF", LogoUrl = null, IsActive = false },
+                new Team { Name = "Salernitana", ShortName = "SAL", City = "Salerno",   Region = "Güney İtalya", Stadium = "Stadio Arechi",                 Capacity = 37180, Founded = 1919, ColorA = "#7A1E2E", ColorB = "#FFFFFF", LogoUrl = null, IsActive = false }
+            };
+
             if (!context.Teams.Any())
             {
-                var teams = new List<Team>
+                context.Teams.AddRange(seedTeams);
+                context.SaveChanges();
+            }
+            else if (context.Teams.Any(x => x.Region == "north" || (x.IsActive && x.LogoUrl == null)))
+            {
+                // Mevcut veritabanında eski bölge adı ("north" vb.) veya boş logo varsa otomatik güncelle:
+                var dbTeams = context.Teams.ToList();
+                foreach (var dbTeam in dbTeams)
                 {
-                    new Team { Name = "Atalanta",    ShortName = "ATA", City = "Bergamo",   Region = "north",  Stadium = "Gewiss Stadium",                Capacity = 24950, Founded = 1907, ColorA = "#1E6FB8", ColorB = "#111111", LogoUrl = null, IsActive = true },
-                    new Team { Name = "Bologna",     ShortName = "BOL", City = "Bologna",   Region = "north",  Stadium = "Stadio Renato Dall'Ara",        Capacity = 36462, Founded = 1909, ColorA = "#1A2F5A", ColorB = "#A21C26", LogoUrl = null, IsActive = true },
-                    new Team { Name = "Cagliari",    ShortName = "CAG", City = "Cagliari",  Region = "island", Stadium = "Unipol Domus",                  Capacity = 16416, Founded = 1920, ColorA = "#A5162B", ColorB = "#0E2A56", LogoUrl = null, IsActive = true },
-                    new Team { Name = "Como",        ShortName = "COM", City = "Como",      Region = "north",  Stadium = "Stadio Giuseppe Sinigaglia",    Capacity = 13602, Founded = 1907, ColorA = "#0B3E91", ColorB = "#FFFFFF", LogoUrl = null, IsActive = true },
-                    new Team { Name = "Fiorentina",  ShortName = "FIO", City = "Firenze",   Region = "center", Stadium = "Stadio Artemio Franchi",        Capacity = 43147, Founded = 1926, ColorA = "#5B2A86", ColorB = "#FFFFFF", LogoUrl = null, IsActive = true },
-                    new Team { Name = "Frosinone",   ShortName = "FRO", City = "Frosinone", Region = "center", Stadium = "Stadio Benito Stirpe",          Capacity = 16227, Founded = 1928, ColorA = "#1C4E9A", ColorB = "#FFD200", LogoUrl = null, IsActive = true },
-                    new Team { Name = "Genoa",       ShortName = "GEN", City = "Genova",    Region = "north",  Stadium = "Stadio Luigi Ferraris",         Capacity = 36599, Founded = 1893, ColorA = "#A2172E", ColorB = "#002B5C", LogoUrl = null, IsActive = true },
-                    new Team { Name = "Inter",       ShortName = "INT", City = "Milano",    Region = "north",  Stadium = "San Siro",                      Capacity = 75817, Founded = 1908, ColorA = "#0A4FA8", ColorB = "#101418", LogoUrl = null, IsActive = true },
-                    new Team { Name = "Juventus",    ShortName = "JUV", City = "Torino",    Region = "north",  Stadium = "Allianz Stadium",               Capacity = 41507, Founded = 1897, ColorA = "#16181D", ColorB = "#E8E8E8", LogoUrl = null, IsActive = true },
-                    new Team { Name = "Lazio",       ShortName = "LAZ", City = "Roma",      Region = "center", Stadium = "Stadio Olimpico",               Capacity = 70634, Founded = 1900, ColorA = "#8FD3F4", ColorB = "#FFFFFF", LogoUrl = null, IsActive = true },
-                    new Team { Name = "Lecce",       ShortName = "LEC", City = "Lecce",     Region = "south",  Stadium = "Stadio Via del Mare",           Capacity = 31533, Founded = 1908, ColorA = "#F6D000", ColorB = "#D21F26", LogoUrl = null, IsActive = true },
-                    new Team { Name = "Milan",       ShortName = "MIL", City = "Milano",    Region = "north",  Stadium = "San Siro",                      Capacity = 75817, Founded = 1899, ColorA = "#C8141E", ColorB = "#111111", LogoUrl = null, IsActive = true },
-                    new Team { Name = "Monza",       ShortName = "MON", City = "Monza",     Region = "north",  Stadium = "U-Power Stadium",               Capacity = 16917, Founded = 1912, ColorA = "#D2122E", ColorB = "#FFFFFF", LogoUrl = null, IsActive = true },
-                    new Team { Name = "Napoli",      ShortName = "NAP", City = "Napoli",    Region = "south",  Stadium = "Stadio Diego Armando Maradona", Capacity = 54726, Founded = 1926, ColorA = "#1E9BD7", ColorB = "#0C3C78", LogoUrl = null, IsActive = true },
-                    new Team { Name = "Parma",       ShortName = "PAR", City = "Parma",     Region = "north",  Stadium = "Stadio Ennio Tardini",          Capacity = 22352, Founded = 1913, ColorA = "#FFD200", ColorB = "#1D3E8A", LogoUrl = null, IsActive = true },
-                    new Team { Name = "Roma",        ShortName = "ROM", City = "Roma",      Region = "center", Stadium = "Stadio Olimpico",               Capacity = 70634, Founded = 1927, ColorA = "#8E1F2F", ColorB = "#F0B323", LogoUrl = null, IsActive = true },
-                    new Team { Name = "Sassuolo",    ShortName = "SAS", City = "Sassuolo",  Region = "north",  Stadium = "Mapei Stadium",                 Capacity = 21584, Founded = 1920, ColorA = "#00A651", ColorB = "#111111", LogoUrl = null, IsActive = true },
-                    new Team { Name = "Torino",      ShortName = "TOR", City = "Torino",    Region = "north",  Stadium = "Stadio Olimpico Grande Torino", Capacity = 27958, Founded = 1906, ColorA = "#7E1B1B", ColorB = "#E9D9B0", LogoUrl = null, IsActive = true },
-                    new Team { Name = "Udinese",     ShortName = "UDI", City = "Udine",     Region = "north",  Stadium = "Bluenergy Stadium",             Capacity = 25144, Founded = 1896, ColorA = "#26282C", ColorB = "#FFFFFF", LogoUrl = null, IsActive = true },
-                    new Team { Name = "Venezia",     ShortName = "VEN", City = "Venezia",   Region = "north",  Stadium = "Stadio Pier Luigi Penzo",       Capacity = 11150, Founded = 1907, ColorA = "#141414", ColorB = "#F06A1A", LogoUrl = null, IsActive = true },
-                    // Pasif Takımlar (Admin Paneli Filtre Testi İçin)
-                    new Team { Name = "Sampdoria",   ShortName = "SAM", City = "Genova",    Region = "north",  Stadium = "Stadio Luigi Ferraris",         Capacity = 36599, Founded = 1946, ColorA = "#1B4FA0", ColorB = "#FFFFFF", LogoUrl = null, IsActive = false },
-                    new Team { Name = "Salernitana", ShortName = "SAL", City = "Salerno",   Region = "south",  Stadium = "Stadio Arechi",                 Capacity = 37180, Founded = 1919, ColorA = "#7A1E2E", ColorB = "#FFFFFF", LogoUrl = null, IsActive = false }
-                };
-
-                context.Teams.AddRange(teams);
+                    var matchSeed = seedTeams.FirstOrDefault(s => s.ShortName == dbTeam.ShortName);
+                    if (matchSeed != null)
+                    {
+                        dbTeam.Region = matchSeed.Region;
+                        dbTeam.LogoUrl = matchSeed.LogoUrl;
+                    }
+                }
                 context.SaveChanges();
             }
 
