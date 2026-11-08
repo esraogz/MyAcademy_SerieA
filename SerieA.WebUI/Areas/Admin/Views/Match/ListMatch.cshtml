@@ -1,0 +1,439 @@
+﻿@using SerieA.WebUI.DTOs.MatchDtos
+@model List<ResultMatchDto>
+@{
+    ViewData["Title"] = "Maç Yönetimi";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    int count = 0;
+}
+
+<!-- 1. SAYFA BAŞLIĞI VE YENİ MAÇ EKLE BUTONU -->
+<div class="page-head">
+    <div>
+        <span class="page-eyebrow">Serie A 2026/27</span>
+        <h1 class="page-title">Maç Yönetimi</h1>
+        <p class="page-desc">Serie A karşılaşmalarını görüntüleyebilir, ekleyebilir, düzenleyebilir ve silebilirsiniz.</p>
+    </div>
+    <button type="button" class="btn-a btn-a--primary" onclick="openCreateMatchModal()">
+        <svg class="icon"><use href="#i-plus" /></svg>Yeni Maç Ekle
+    </button>
+</div>
+
+<!-- 2. FİLTRE BARI (form method="get") -->
+<section class="card-a" aria-label="Maç listesi">
+    <form method="get" asp-area="Admin" asp-controller="Match" asp-action="ListMatch" class="filter-bar">
+        <div class="filter-search">
+            <label class="field-label" for="f-team">Takım Ara</label>
+            <div class="input-icon">
+                <svg class="icon"><use href="#i-search" /></svg>
+                <input class="input-a" id="f-team" name="team" type="search" placeholder="Takım adı yazın...">
+            </div>
+        </div>
+        <div>
+            <label class="field-label" for="f-week">Hafta Seç</label>
+            <select class="select-a" id="f-week" name="week">
+                <option value="">Tüm Haftalar</option>
+                @for (int i = 1; i <= 38; i++)
+                {
+                    <option value="@i">@i. Hafta</option>
+                }
+            </select>
+        </div>
+        <div>
+            <label class="field-label" for="f-status">Durum</label>
+            <select class="select-a" id="f-status" name="status">
+                <option value="">Tümü</option>
+                <option value="NotStarted">Başlamadı</option>
+                <option value="Live">Canlı</option>
+                <option value="Finished">Tamamlandı</option>
+                <option value="Postponed">Ertelendi</option>
+            </select>
+        </div>
+        <div class="filter-actions">
+            <a asp-area="Admin" asp-controller="Match" asp-action="ListMatch" class="btn-a btn-a--ghost" style="text-decoration:none;">Temizle</a>
+            <button type="submit" class="btn-a btn-a--secondary">Filtrele</button>
+        </div>
+    </form>
+
+    @*     <!-- 3. MAÇ TABLOSU --> *@
+    <div class="table-scroll">
+        <table class="match-table">
+            <thead>
+                <tr>
+                    <th scope="col" class="col-id"> ID </th>
+                    <th scope="col"> Hafta </th>
+                    <th scope="col"> Tarih </th>
+                    <th scope="col"> Saat </th>
+                    <th scope="col"> Ev Sahibi </th>
+                    <th scope="col" class="col-score"> Skor </th>
+                    <th scope="col"> Deplasman </th>
+                    <th scope="col"> Durum </th>
+                    <th scope="col" class="col-actions"> İşlemler </th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        count++;
+                        var statusBadge = item.Status switch
+                        {
+                            "Finished" => "badge-a--Finished",
+                            "Live" => "badge-a--Live",
+                            "Postponed" => "badge-a--Postponed",
+                            _ => "badge-a--NotStarted"
+                        };
+                        var statusText = item.Status switch
+                        {
+                            "Finished" => "Tamamlandı",
+                            "Live" => "Canlı",
+                            "Postponed" => "Ertelendi",
+                            _ => "Başlamadı"
+                        };
+
+                        <tr>
+                            <td class="col-id">@item.MatchId</td>
+                            <td class="week-cell">@item.Week. Hafta</td>
+                            <td>@item.MatchDate.ToString("dd.MM.yyyy")</td>
+                            <td>@item.MatchDate.ToString("HH:mm")</td>
+                            <td>
+                                <span class="team">
+                                    @if (!string.IsNullOrEmpty(item.HomeTeamLogoUrl))
+                                    {
+                                        <img class="team-crest" src="@item.HomeTeamLogoUrl" alt="@item.HomeTeamName" />
+                                    }
+                                    else
+                                    {
+                                        <span class="team-crest" style="--crest-a:@item.HomeTeamColorA; --crest-b:@item.HomeTeamColorB"></span>
+                                    }
+                                    @item.HomeTeamName
+                                </span>
+                            </td>
+                            <td class="col-score">
+                                @if (item.Status == "Live" || item.Status == "Finished")
+                                {
+                                    <span class="score">@item.HomeScore - @item.AwayScore</span>
+                                }
+                                else
+                                {
+                                    <span class="score score--empty">-</span>
+                                }
+                            </td>
+                            <td>
+                                <span class="team">
+                                    @if (!string.IsNullOrEmpty(item.AwayTeamLogoUrl))
+                                    {
+                                        <img class="team-crest" src="@item.AwayTeamLogoUrl" alt="@item.AwayTeamName" />
+                                    }
+                                    else
+                                    {
+                                        <span class="team-crest" style="--crest-a:@item.AwayTeamColorA; --crest-b:@item.AwayTeamColorB"></span>
+                                    }
+                                    @item.AwayTeamName
+                                </span>
+                            </td>
+                            <td><span class="badge-a @statusBadge">@statusText</span></td>
+                            <td class="col-actions">
+                                <div class="row-actions">
+                                    <!-- 1. GÖRSELDEKİ MAÇ DETAY SAYFASINA GİT BUTONU -->
+                                    <a class="act-btn" asp-area="Admin" asp-controller="MatchDetail" asp-action="MatchDetail" asp-route-id="@item.MatchId" title="Maç Detayı">
+                                        <svg class="icon"><use href="#i-eye" /></svg>
+                                    </a>
+                                    <!-- DÜZENLEME MODALINI AÇAN BUTON -->
+                                    <button type="button" class="act-btn" title="Düzenle"
+                                            data-id="@item.MatchId"
+                                            data-week="@item.Week"
+                                            data-hometeamid="@item.HomeTeamId"
+                                            data-awayteamid="@item.AwayTeamId"
+                                            data-date="@item.MatchDate.ToString("yyyy-MM-dd")"
+                                            data-time="@item.MatchDate.ToString("HH:mm")"
+                                            data-stadium="@item.Stadium"
+                                            data-status="@item.Status"
+                                            data-homescore="@item.HomeScore"
+                                            data-awayscore="@item.AwayScore"
+                                            onclick="openUpdateMatchModal(this)">
+                                        <svg class="icon"><use href="#i-edit" /></svg>
+                                    </button>
+                                    <!-- SİLME MODALINI AÇAN BUTON -->
+                                    <button type="button" class="act-btn act-btn--danger" title="Sil"
+                                            onclick="openDeleteModal(@item.MatchId, '@item.HomeTeamName - @item.AwayTeamName')">
+                                        <svg class="icon"><use href="#i-trash" /></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr class="table-empty"><td colspan="9"><strong>Kayıt bulunamadı.</strong></td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ========================================================= -->
+<!-- MODAL 1: YENİ MAÇ EKLE -->
+<!-- ========================================================= -->
+<dialog class="modal-a" id="create-match-modal">
+    <form asp-area="Admin" asp-controller="Match" asp-action="CreateMatch" method="post">
+        <div class="modal-head">
+            <h2 class="modal-title">Yeni Maç Ekle</h2>
+            <button type="button" class="icon-btn" onclick="document.getElementById('create-match-modal').close()"><svg class="icon"><use href="#i-x" /></svg></button>
+        </div>
+        <div class="modal-body">
+            @if (TempData["CreateMatchError"] != null)
+            {
+                <div class="form-alert is-visible" style="margin: 12px 16px;">⚠️ @TempData["CreateMatchError"]</div>
+            }
+            <div class="form-grid">
+                <div class="form-field">
+                    <label class="field-label">Hafta <span class="req">*</span></label>
+                    <select class="select-a" name="Week" required>
+                        @for (int i = 1; i <= 38; i++)
+                        {
+                            <option value="@i">@i. Hafta</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">Maç Durumu</label>
+                    <select class="select-a" name="Status" id="c-status" onchange="toggleScore('c')">
+                        <option value="NotStarted" selected>Başlamadı</option>
+                        <option value="Live">Canlı</option>
+                        <option value="Finished">Tamamlandı</option>
+                        <option value="Postponed">Ertelendi</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">Ev Sahibi Takım <span class="req">*</span></label>
+                    <select class="select-a" name="HomeTeamId" id="c-home" required>
+                        <option value="">Takım seçin</option>
+                        @if (ViewBag.Teams != null)
+                        {
+                            foreach (var team in (List<ResultTeamDto>)ViewBag.Teams)
+                            {
+                                <option value="@team.TeamId" data-stadium="@team.Stadium">@team.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">Deplasman Takımı <span class="req">*</span></label>
+                    <select class="select-a" name="AwayTeamId" id="c-away" required>
+                        <option value="">Takım seçin</option>
+                        @if (ViewBag.Teams != null)
+                        {
+                            foreach (var team in (List<SerieA.WebUI.DTOs.TeamDtos.ResultTeamDto>)ViewBag.Teams)
+                            {
+                                <option value="@team.TeamId">@team.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">Maç Tarihi <span class="req">*</span></label>
+                    <input class="input-a" name="MatchDateOnly" type="date">
+                </div>
+                <div class="form-field">
+                    <label class="field-label">Maç Saati <span class="req">*</span></label>
+                    <input class="input-a" name="MatchTimeOnly" type="time">
+                </div>
+                <div class="form-field span-2">
+                    <label class="field-label">Stadyum</label>
+                    <input class="input-a" name="Stadium" id="c-stadium" type="text" placeholder="Ev sahibi seçilince otomatik dolar">
+                </div>
+                <div class="score-fields span-2" id="c-score-fields" style="display:none;">
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label class="field-label">Ev Sahibi Skoru</label>
+                            <input class="input-a" name="HomeScore" type="number" min="0" max="20">
+                        </div>
+                        <div class="form-field">
+                            <label class="field-label">Deplasman Skoru</label>
+                            <input class="input-a" name="AwayScore" type="number" min="0" max="20">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-foot">
+            <button type="button" class="btn-a btn-a--secondary" onclick="document.getElementById('create-match-modal').close()">Vazgeç</button>
+            <button type="submit" class="btn-a btn-a--primary">Kaydet</button>
+        </div>
+    </form>
+</dialog>
+
+<!-- ========================================================= -->
+<!-- MODAL 2: MAÇI DÜZENLE -->
+<!-- ========================================================= -->
+<dialog class="modal-a" id="update-match-modal">
+    <form asp-area="Admin" asp-controller="Match" asp-action="UpdateMatch" method="post">
+        <div class="modal-head">
+            <h2 class="modal-title">Maçı Düzenle</h2>
+            <button type="button" class="icon-btn" onclick="document.getElementById('update-match-modal').close()"><svg class="icon"><use href="#i-x" /></svg></button>
+        </div>
+        <div class="modal-body">
+            @if (TempData["UpdateMatchError"] != null)
+            {
+                <div class="form-alert is-visible">⚠️ @TempData["UpdateMatchError"]</div>
+            }
+            <input type="hidden" name="MatchId" id="u-id">
+            <div class="form-grid">
+                <div class="form-field">
+                    <label class="field-label">Hafta <span class="req">*</span></label>
+                    <select class="select-a" name="Week" id="u-week" required>
+                        @for (int i = 1; i <= 38; i++)
+                        {
+                            <option value="@i">@i. Hafta</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">Maç Durumu</label>
+                    <select class="select-a" name="Status" id="u-status" onchange="toggleScore('u')">
+                        <option value="NotStarted">Başlamadı</option>
+                        <option value="Live">Canlı</option>
+                        <option value="Finished">Tamamlandı</option>
+                        <option value="Postponed">Ertelendi</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">Ev Sahibi Takım <span class="req">*</span></label>
+                    <select class="select-a" name="HomeTeamId" id="u-home" required>
+                        @if (ViewBag.Teams != null)
+                        {
+                            foreach (var team in (List<SerieA.WebUI.DTOs.TeamDtos.ResultTeamDto>)ViewBag.Teams)
+                            {
+                                <option value="@team.TeamId" data-stadium="@team.Stadium">@team.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">Deplasman Takımı <span class="req">*</span></label>
+                    <select class="select-a" name="AwayTeamId" id="u-away" required>
+                        @if (ViewBag.Teams != null)
+                        {
+                            foreach (var team in (List<SerieA.WebUI.DTOs.TeamDtos.ResultTeamDto>)ViewBag.Teams)
+                            {
+                                <option value="@team.TeamId">@team.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">Maç Tarihi <span class="req">*</span></label>
+                    <input class="input-a" name="MatchDateOnly" id="u-date" type="date" required>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">Maç Saati <span class="req">*</span></label>
+                    <input class="input-a" name="MatchTimeOnly" id="u-time" type="time" required>
+                </div>
+                <div class="form-field span-2">
+                    <label class="field-label">Stadyum</label>
+                    <input class="input-a" name="Stadium" id="u-stadium" type="text">
+                </div>
+                <div class="score-fields span-2" id="u-score-fields" style="display:none;">
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label class="field-label">Ev Sahibi Skoru</label>
+                            <input class="input-a" name="HomeScore" id="u-homescore" type="number" min="0" max="20">
+                        </div>
+                        <div class="form-field">
+                            <label class="field-label">Deplasman Skoru</label>
+                            <input class="input-a" name="AwayScore" id="u-awayscore" type="number" min="0" max="20">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-foot">
+            <button type="button" class="btn-a btn-a--secondary" onclick="document.getElementById('update-match-modal').close()">Vazgeç</button>
+            <button type="submit" class="btn-a btn-a--primary">Güncelle</button>
+        </div>
+    </form>
+</dialog>
+
+<!-- ========================================================= -->
+<!-- MODAL 3: SİLME ONAY MODALI -->
+<!-- ========================================================= -->
+<dialog class="modal-a modal-a--sm" id="delete-modal">
+    <div class="modal-head">
+        <h2 class="modal-title">Maçı Sil</h2>
+        <button type="button" class="icon-btn" onclick="document.getElementById('delete-modal').close()"><svg class="icon"><use href="#i-x" /></svg></button>
+    </div>
+    <div class="modal-body">
+        <p class="confirm-text"><strong id="del-match-name"></strong> maçı kalıcı olarak silinecek. Bu işlem geri alınamaz.</p>
+    </div>
+    <div class="modal-foot">
+        <button type="button" class="btn-a btn-a--secondary" onclick="document.getElementById('delete-modal').close()">Vazgeç</button>
+        <a id="del-confirm-link" href="#" class="btn-a btn-a--danger" style="text-decoration:none;">Evet, Sil</a>
+    </div>
+</dialog>
+
+<script>
+    function openCreateMatchModal() {
+        document.getElementById('create-match-modal').showModal();
+    }
+
+    function openUpdateMatchModal(btn) {
+        document.getElementById('u-id').value = btn.dataset.id;
+        document.getElementById('u-week').value = btn.dataset.week;
+        document.getElementById('u-home').value = btn.dataset.hometeamid;
+        document.getElementById('u-away').value = btn.dataset.awayteamid;
+        document.getElementById('u-date').value = btn.dataset.date;
+        document.getElementById('u-time').value = btn.dataset.time;
+        document.getElementById('u-stadium').value = btn.dataset.stadium;
+        document.getElementById('u-status').value = btn.dataset.status;
+        document.getElementById('u-homescore').value = btn.dataset.homescore || '';
+        document.getElementById('u-awayscore').value = btn.dataset.awayscore || '';
+
+        toggleScore('u');
+        document.getElementById('update-match-modal').showModal();
+    }
+
+    function openDeleteModal(id, name) {
+        document.getElementById('del-match-name').textContent = name;
+        document.getElementById('del-confirm-link').href = '/Admin/Match/DeleteMatch/' + id;
+        document.getElementById('delete-modal').showModal();
+    }
+
+    function toggleScore(prefix) {
+        const status = document.getElementById(prefix + '-status').value;
+        const scoreBox = document.getElementById(prefix + '-score-fields');
+        if (status === 'Live' || status === 'Finished') {
+            scoreBox.style.display = 'block';
+        } else {
+            scoreBox.style.display = 'none';
+        }
+    }
+
+    // Ev sahibi seçildiğinde stadyumu otomatik doldurma
+    document.getElementById('c-home').addEventListener('change', function() {
+        const selected = this.options[this.selectedIndex];
+        document.getElementById('c-stadium').value = selected.dataset.stadium || '';
+    });
+
+        // 1. Hata varsa ilgili popup'ı otomatik aç:
+    @if (TempData["CreateMatchError"] != null)
+    {
+            <text>openCreateMatchModal();</text>
+    }
+    @if (TempData["UpdateMatchError"] != null)
+    {
+            <text>
+            const editBtn = document.querySelector('button[data-id="@TempData["UpdateMatchId"]"]');
+            if (editBtn) openUpdateMatchModal(editBtn);
+            </text>
+    }
+
+    // 2. Popup kapandığı anda (X, Vazgeç veya ESC) içindeki hata mesajlarını temizle:
+    document.querySelectorAll('.modal-a').forEach(modal => {
+        modal.addEventListener('close', () => {
+            modal.querySelectorAll('.form-alert, .field-validation-error').forEach(el => el.remove());
+        });
+    });
+</script>
+</script>
