@@ -1,18 +1,22 @@
-﻿using SerieA.WebUI.DTOs.TeamDtos;
+﻿using SerieA.WebUI.Areas.Admin.Models;
+using SerieA.WebUI.DTOs.ErrorDtos;
+using SerieA.WebUI.DTOs.TeamDtos;
 using System.Net.Http.Json;
 
 namespace SerieA.WebUI.Services.TeamServices
 {
     public class TeamService(HttpClient _client) : ITeamService
     {
-        public async Task CreateTeamAsync(CreateTeamDto createTeamDto)
+        public async Task<string?> CreateTeamAsync(CreateTeamDto createTeamDto)
         {
-            await _client.PostAsJsonAsync("Teams", createTeamDto);
+            var response = await _client.PostAsJsonAsync("Teams", createTeamDto);
+            return await ReadErrorAsync(response);
         }
 
-        public async Task DeleteTeamAsync(int id)
+        public async Task<string?> DeleteTeamAsync(int id)
         {
-            await _client.DeleteAsync($"Teams/{id}");
+            var response = await _client.DeleteAsync($"Teams/{id}");
+            return await ReadErrorAsync(response);
         }
 
         public async Task<List<ResultTeamDto>> GetAllTeamsAsync()
@@ -25,9 +29,21 @@ namespace SerieA.WebUI.Services.TeamServices
             return await _client.GetFromJsonAsync<UpdateTeamDto>($"Teams/{id}");
         }
 
-        public async Task UpdateTeamAsync(UpdateTeamDto updateTeamDto)
+        public async Task<string?> UpdateTeamAsync(UpdateTeamDto updateTeamDto)
         {
-            await _client.PutAsJsonAsync("Teams", updateTeamDto);
+            var response = await _client.PutAsJsonAsync("Teams", updateTeamDto);
+            return await ReadErrorAsync(response);
+        }
+
+        //API'deki GlobalExceptionHandler'dan gelen mesajı okuyan merkezi metot:
+        private async Task<string?> ReadErrorAsync(HttpResponseMessage response)
+        {
+            if (response.IsSuccessStatusCode)
+            {
+                return null;
+            }
+            var error = await response.Content.ReadFromJsonAsync<ApiErrorDto>();
+            return error?.Message ?? "İşlem sırasında bir hata oluştu";
         }
     }
 }

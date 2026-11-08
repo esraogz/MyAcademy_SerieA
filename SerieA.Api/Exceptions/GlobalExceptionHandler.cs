@@ -20,7 +20,7 @@ namespace SerieA.WebApi.Exceptions
             await httpContext.Response.WriteAsJsonAsync(new
             {
                 StatusCode = httpContext.Response.StatusCode,
-                Message = exception.Message
+                Message = exception.Message  
             }, cancellationToken);
 
             return true;

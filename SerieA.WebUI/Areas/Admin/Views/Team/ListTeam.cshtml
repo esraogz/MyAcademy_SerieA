@@ -1,4 +1,4 @@
-﻿@model List<ResultTeamDto>
+﻿@model ListTeamNavbarViewModel
 @{
     ViewData["Title"] = "ListTeam";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
@@ -12,7 +12,7 @@
         <h1 class="page-title">Takım Yönetimi</h1>
         <p class="page-desc">Serie A kulüplerini görüntüleyebilir, ekleyebilir, düzenleyebilir ve silebilirsiniz.</p>
     </div>
-    <button type="button" class="btn-a btn-a--primary" onclick="document.getElementById('create-modal').showModal()">
+    <button type="button" class="btn-a btn-a--primary" onclick="openCreateModal()">
         <svg class="icon" aria-hidden="true"><use href="#i-plus" /></svg>Yeni Takım Ekle
     </button>
 </div>
@@ -23,45 +23,45 @@
         <span class="strip-icon"><svg class="icon"><use href="#i-shield" /></svg></span>
         <div>
             <span class="strip-label">Aktif takım</span>
-            <span class="strip-value">20 <small>/ 20</small></span>
+            <span class="strip-value">@Model.ActiveTeam <small>/@Model.TotalTeamCount</small></span>
         </div>
     </div>
     <div class="strip-item strip-item--blue">
         <span class="strip-icon"><svg class="icon"><use href="#i-pin" /></svg></span>
         <div>
             <span class="strip-label">Temsil edilen şehir</span>
-            <span class="strip-value">16</span>
+            <span class="strip-value">@Model.CityRepresented</span>
         </div>
     </div>
     <div class="strip-item strip-item--navy">
         <span class="strip-icon"><svg class="icon"><use href="#i-stadium" /></svg></span>
         <div>
             <span class="strip-label">Toplam stadyum kapasitesi</span>
-            <span class="strip-value">650.000</span>
+            <span class="strip-value">@Model.TotalStadiumCapacity</span>
         </div>
     </div>
     <div class="strip-item strip-item--red">
         <span class="strip-icon"><svg class="icon"><use href="#i-clock" /></svg></span>
         <div>
             <span class="strip-label">En köklü kulüp</span>
-            <span class="strip-value">Genoa <small>1893</small></span>
+            <span class="strip-value">@Model.OldestClubN <small>@Model.OldestClubF</small></span>
         </div>
     </div>
 </section>
 
 <!-- 3. FİLTRE VE TAKIM TABLOSU -->
 <section class="card-a" aria-label="Takım listesi">
-    <div class="filter-bar">
+    <form method="get" asp-area="Admin" asp-controller="Team" asp-action="ListTeam" class="filter-bar">
         <div class="filter-search">
             <label class="field-label" for="f-q">Takım Ara</label>
             <div class="input-icon">
                 <svg class="icon" aria-hidden="true"><use href="#i-search" /></svg>
-                <input class="input-a" id="f-q" type="search" placeholder="Takım, şehir veya stadyum">
+                <input class="input-a" id="f-q" name="search" type="search" placeholder="Takım, şehir veya stadyum">
             </div>
         </div>
         <div>
             <label class="field-label" for="f-region">Bölge</label>
-            <select class="select-a" id="f-region">
+            <select class="select-a" id="f-region" name="region">
                 <option value="">Tüm Bölgeler</option>
                 <option value="Kuzey İtalya">Kuzey İtalya</option>
                 <option value="Orta İtalya">Orta İtalya</option>
@@ -69,22 +69,25 @@
                 <option value="Adalar">Adalar</option>
             </select>
         </div>
-        @* Aktif/Pasif Filtreleme *@
         <div>
             <label class="field-label" for="f-status">Durum</label>
-            <select class="select-a" id="f-status">
+            <select class="select-a" id="f-status" name="status">
                 <option value="">Tümü</option>
                 <option value="active">Aktif (Serie A)</option>
                 <option value="inactive">Pasif</option>
             </select>
         </div>
         <div class="filter-actions">
-            <button type="button" class="btn-a btn-a--ghost">Temizle</button>
-            <button type="button" class="btn-a btn-a--secondary">Filtrele</button>
+            <a asp-area="Admin" asp-controller="Team" asp-action="ListTeam" class="btn-a btn-a--ghost" style="text-decoration:none;">Temizle</a>
+            <button type="submit" class="btn-a btn-a--secondary">Filtrele</button>
         </div>
-    </div>
+    </form>
 
     <div class="table-scroll">
+        @if (TempData["DeleteError"] != null)
+        {
+            <div class="form-alert is-visible">⚠️ @TempData["DeleteError"]</div>
+        }
         <table class="team-table">
             <thead>
                 <tr>
@@ -100,7 +103,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in Model.Teams)
                 {
                     count++;
                     <tr>
@@ -153,7 +156,7 @@
                                         data-founded="@item.Founded"
                                         data-colora="@item.ColorA"
                                         data-colorb="@item.ColorB"
-                                        data-isactive="@item.IsActive"
+                                        data-isactive="@item.IsActive.ToString().ToLower()"
                                         onclick="openUpdateModal(this)">
                                     <svg class="icon"><use href="#i-edit" /></svg>
                                 </button>
@@ -187,18 +190,25 @@
             </button>
         </div>
         <div class="modal-body">
+            @if (ViewBag.ApiError != null)
+            {
+                <div class="form-alert is-visible">⚠️ @ViewBag.ApiError</div>
+            }
             <div class="form-grid">
                 <div class="form-field">
                     <label class="field-label">Takım Adı <span class="req">*</span></label>
-                    <input class="input-a" name="Name" type="text" maxlength="40" placeholder="Örn. Sampdoria" required>
+                    <input class="input-a" name="Name" type="text" placeholder="Örn. Sampdoria">
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("Name")</span>
                 </div>
                 <div class="form-field">
                     <label class="field-label">Kısa Ad <span class="req">*</span></label>
-                    <input class="input-a code-input" name="ShortName" type="text" maxlength="3" placeholder="SAM" required>
+                    <input class="input-a code-input" name="ShortName" type="text" placeholder="SAM">
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("ShortName")</span>
                 </div>
                 <div class="form-field">
                     <label class="field-label">Şehir <span class="req">*</span></label>
-                    <input class="input-a" name="City" type="text" placeholder="Örn. Genova" required>
+                    <input class="input-a" name="City" type="text" placeholder="Örn. Genova">
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("City")</span>
                 </div>
                 <div class="form-field">
                     <label class="field-label">Bölge <span class="req">*</span></label>
@@ -208,18 +218,22 @@
                         <option value="Güney İtalya">Güney İtalya</option>
                         <option value="Adalar">Adalar</option>
                     </select>
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("Region")</span>
                 </div>
                 <div class="form-field span-2">
                     <label class="field-label">Stadyum <span class="req">*</span></label>
-                    <input class="input-a" name="Stadium" type="text" placeholder="Örn. Stadio Luigi Ferraris" required>
+                    <input class="input-a" name="Stadium" type="text" placeholder="Örn. Stadio Luigi Ferraris">
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("Stadium")</span>
                 </div>
                 <div class="form-field">
                     <label class="field-label">Stadyum Kapasitesi <span class="req">*</span></label>
-                    <input class="input-a" name="Capacity" type="number" min="1000" max="100000" placeholder="Örn. 36599" required>
+                    <input class="input-a" name="Capacity" type="number" placeholder="Örn. 36599">
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("Capacity")</span>
                 </div>
                 <div class="form-field">
                     <label class="field-label">Kuruluş Yılı <span class="req">*</span></label>
-                    <input class="input-a" name="Founded" type="number" min="1850" max="2026" placeholder="Örn. 1946" required>
+                    <input class="input-a" name="Founded" type="number" placeholder="Örn. 1946">
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("Founded")</span>
                 </div>
                 <div class="form-field span-2">
                     <span class="field-label">Kulüp Renkleri <span class="req">*</span></span>
@@ -227,10 +241,12 @@
                         <label class="color-input">
                             <input type="color" name="ColorA" value="#1E5BD8">
                             <span>Ana renk</span>
+                            <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("ColorA")</span>
                         </label>
                         <label class="color-input">
                             <input type="color" name="ColorB" value="#FFFFFF">
                             <span>İkinci renk</span>
+                            <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("ColorB")</span>
                         </label>
                     </div>
                 </div>
@@ -262,41 +278,52 @@
             </button>
         </div>
         <div class="modal-body">
+            @if (ViewBag.ApiError != null)
+            {
+                <div class="form-alert is-visible">⚠️ @ViewBag.ApiError</div>
+            }
             <input type="hidden" name="TeamId" id="u-id">
 
             <div class="form-grid">
                 <div class="form-field">
                     <label class="field-label">Takım Adı <span class="req">*</span></label>
-                    <input class="input-a" name="Name" id="u-name" type="text" maxlength="40" required>
+                    <input class="input-a" name="Name" id="u-name" type="text" maxlength="40">
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("Name")</span>
                 </div>
                 <div class="form-field">
                     <label class="field-label">Kısa Ad <span class="req">*</span></label>
-                    <input class="input-a code-input" name="ShortName" id="u-shortname" type="text" maxlength="3" required>
+                    <input class="input-a code-input" name="ShortName" id="u-shortname" type="text" maxlength="3">
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("ShortName")</span>
                 </div>
                 <div class="form-field">
                     <label class="field-label">Şehir <span class="req">*</span></label>
-                    <input class="input-a" name="City" id="u-city" type="text" required>
+                    <input class="input-a" name="City" id="u-city" type="text">
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("City")</span>
                 </div>
                 <div class="form-field">
                     <label class="field-label">Bölge <span class="req">*</span></label>
-                    <select class="select-a" name="Region" id="u-region" required>
+                    <select class="select-a" name="Region" id="u-region">
                         <option value="Kuzey İtalya">Kuzey İtalya</option>
                         <option value="Orta İtalya">Orta İtalya</option>
                         <option value="Güney İtalya">Güney İtalya</option>
                         <option value="Adalar">Adalar</option>
                     </select>
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("Region")</span>
                 </div>
                 <div class="form-field span-2">
                     <label class="field-label">Stadyum <span class="req">*</span></label>
-                    <input class="input-a" name="Stadium" id="u-stadium" type="text" required>
+                    <input class="input-a" name="Stadium" id="u-stadium" type="text">
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("Stadium")</span>
                 </div>
                 <div class="form-field">
                     <label class="field-label">Stadyum Kapasitesi <span class="req">*</span></label>
-                    <input class="input-a" name="Capacity" id="u-capacity" type="number" min="1000" max="100000" required>
+                    <input class="input-a" name="Capacity" type="number" id="u-capacity">
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("Capacity")</span>
                 </div>
                 <div class="form-field">
                     <label class="field-label">Kuruluş Yılı <span class="req">*</span></label>
-                    <input class="input-a" name="Founded" id="u-founded" type="number" min="1850" max="2026" required>
+                    <input class="input-a" name="Founded" type="number" id="u-founded">
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("Founded")</span>
                 </div>
                 <div class="form-field span-2">
                     <span class="field-label">Kulüp Renkleri <span class="req">*</span></span>
@@ -304,10 +331,12 @@
                         <label class="color-input">
                             <input type="color" name="ColorA" id="u-colora">
                             <span>Ana renk</span>
+                            <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("ColorA")</span>
                         </label>
                         <label class="color-input">
                             <input type="color" name="ColorB" id="u-colorb">
                             <span>İkinci renk</span>
+                            <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("ColorB")</span>
                         </label>
                     </div>
                 </div>
@@ -328,8 +357,15 @@
 </dialog>
 
 <script>
-    // Düzenle butonuna basıldığında satırdaki verileri Güncelleme Popup'ına dolduran minik fonksiyon:
+
+    function openCreateModal() {
+        const modal = document.getElementById('create-modal');
+        modal.querySelector('form').reset();
+        modal.querySelectorAll('.field-validation-error').forEach(el => el.textContent = '');
+        modal.showModal();
+    }
     function openUpdateModal(btn) {
+        document.querySelectorAll('#update-modal .field-validation-error').forEach(el => el.textContent = '');
         document.getElementById('u-id').value = btn.dataset.id;
         document.getElementById('u-name').value = btn.dataset.name;
         document.getElementById('u-shortname').value = btn.dataset.shortname;
@@ -344,5 +380,15 @@
 
         document.getElementById('update-modal').showModal();
     }
+     @if (ViewBag.OpenCreateModal == true)
+    {
+                        <text>document.getElementById('create-modal').showModal();</text>
+    }
+    @if (ViewBag.OpenUpdateModal == true)
+    {
+                        <text>document.getElementById('update-modal').showModal();</text>
+    }
+
+
 </script>
 
