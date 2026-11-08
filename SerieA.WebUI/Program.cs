@@ -1,5 +1,11 @@
+using FluentValidation;
 using SerieA.WebUI.Options;
+using SerieA.WebUI.Services;
+using SerieA.WebUI.Services.MatchDetails;
+using SerieA.WebUI.Services.Matches;
 using SerieA.WebUI.Services.TeamServices;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +18,21 @@ builder.Services.AddHttpClient<ITeamService, TeamService>(options =>
 {
     options.BaseAddress = new Uri(apiOptions.BaseUrl);
 });
+
+builder.Services.AddHttpClient<IMatchService, MatchService>((sp, client) =>
+{
+    client.BaseAddress = new Uri(apiOptions.BaseUrl);
+});
+
+builder.Services.AddHttpClient<IMatchDetailService, MatchDetailService>((sp, client) =>
+{
+    client.BaseAddress = new Uri(apiOptions.BaseUrl);
+});
+
+builder.Services.AddScoped<TeamViewModelService>();
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 

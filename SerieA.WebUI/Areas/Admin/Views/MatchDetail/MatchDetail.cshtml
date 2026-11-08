@@ -1,0 +1,249 @@
+﻿@model ResultMatchDetailDto
+@{
+    ViewData["Title"] = $"{Model.HomeTeamName} - {Model.AwayTeamName} | Maç Detayı";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<!-- ÜST BAŞLIK VE BUTONLAR (Görsel 1) -->
+<div class="page-head" style="margin-bottom: 24px;">
+    <div>
+        <span class="page-eyebrow">Yönetim / Maçlar / Detay</span>
+        <h1 class="page-title">Maç Detayı</h1>
+        <p class="page-desc">Skor, gol, kart ve oyuncu değişikliği kayıtlarını görüntüleyin ve yönetin.</p>
+    </div>
+    <div style="display:flex; gap:10px;">
+        <a asp-area="Admin" asp-controller="Match" asp-action="ListMatch" class="btn-a btn-a--secondary" style="text-decoration:none;">
+            <svg class="icon"><use href="#i-arrow-left" /></svg>Maçlara Dön
+        </a>
+        <button type="button" class="btn-a btn-a--primary" onclick="openEventModal()">
+            <svg class="icon"><use href="#i-plus" /></svg>Olay Ekle
+        </button>
+    </div>
+</div>
+
+<!-- 1. ORTADAKİ MAÇ SKOR KARTI (Görsel 1) -->
+<section class="card-a" style="padding: 28px; margin-bottom: 24px; text-align: center; border-radius: 14px;">
+    <div style="display: flex; justify-content: space-around; align-items: center; max-width: 700px; margin: 0 auto;">
+        <!-- Ev Sahibi -->
+        <div style="display: flex; flex-direction: column; align-items: center; width: 180px;">
+            <img src="@Model.HomeTeamLogoUrl" alt="@Model.HomeTeamName" style="width: 64px; height: 64px; object-fit: contain; margin-bottom: 8px;" />
+            <strong style="font-size: 1.25rem;">@Model.HomeTeamName</strong>
+            <span style="font-size: 0.8rem; color: var(--dim); font-weight: 600;">EV SAHİBİ</span>
+        </div>
+
+        <!-- Skor & Durum -->
+        <div style="display: flex; flex-direction: column; align-items: center;">
+            <div style="font-size: 3rem; font-weight: 800; font-family: var(--font-display); letter-spacing: 4px; line-height: 1;">
+                @(Model.HomeScore ?? 0) : @(Model.AwayScore ?? 0)
+            </div>
+            <span class="badge-a badge-a--@Model.Status" style="margin-top: 8px;">
+                @(Model.Status == "Live" ? $"• Canlı ({Model.LiveMinute}')" : Model.Status)
+            </span>
+        </div>
+
+        <!-- Deplasman -->
+        <div style="display: flex; flex-direction: column; align-items: center; width: 180px;">
+            <img src="@Model.AwayTeamLogoUrl" alt="@Model.AwayTeamName" style="width: 64px; height: 64px; object-fit: contain; margin-bottom: 8px;" />
+            <strong style="font-size: 1.25rem;">@Model.AwayTeamName</strong>
+            <span style="font-size: 0.8rem; color: var(--dim); font-weight: 600;">DEPLASMAN</span>
+        </div>
+    </div>
+
+    <div style="display: flex; justify-content: center; gap: 24px; margin-top: 20px; font-size: 0.9rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px;">
+        <span><svg class="icon"><use href="#i-calendar" /></svg> @Model.Week. Hafta</span>
+        <span><svg class="icon"><use href="#i-clock" /></svg> @Model.MatchDate.ToString("dd.MM.yyyy HH:mm")</span>
+        <span><svg class="icon"><use href="#i-stadium" /></svg> @Model.Stadium</span>
+    </div>
+</section>
+
+<!-- 2. ALTTAKİ İKİ PANEL: OLAY AKIŞI & OLAY KAYITLARI (Görsel 1) -->
+<div style="display: grid; grid-template-columns: 1fr 1.3fr; gap: 24px;">
+    <!-- Sol Panel: Olay Akışı -->
+    <div class="card-a" style="padding: 20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <h3 style="margin:0; font-size:1.1rem; display:flex; align-items:center; gap:8px;">
+                <svg class="icon"><use href="#i-clock" /></svg> Olay Akışı
+            </h3>
+            <span class="badge-a badge-a--inactive">@(Model.Events?.Count ?? 0) Olay</span>
+        </div>
+
+        @if (Model.Events == null || !Model.Events.Any())
+        {
+            <!-- Boş Durum (Görsel 1'deki boş görünüm) -->
+            <div style="text-align:center; padding: 48px 16px;">
+                <div style="width:52px; height:52px; border-radius:50%; background:var(--blue-soft); color:var(--blue); display:grid; place-items:center; margin: 0 auto 12px;">
+                    <svg class="icon" style="width:24px; height:24px;"><use href="#i-ball" /></svg>
+                </div>
+                <h4 style="margin:0 0 6px;">Henüz Kayıtlı Olay Yok</h4>
+                <p style="color:var(--muted); font-size:0.85rem; margin-bottom:16px;">Bu maça ait henüz gol, kart veya oyuncu değişikliği kaydı bulunmuyor.</p>
+                <button type="button" class="btn-a btn-a--primary" onclick="openEventModal()">
+                    <svg class="icon"><use href="#i-plus" /></svg> İlk Olayı Ekle
+                </button>
+            </div>
+        }
+        else
+        {
+            <!-- Zaman Çizelgesi (Timeline) -->
+            <ul style="list-style:none; padding:0; margin:0;">
+                @foreach (var ev in Model.Events.OrderBy(x => x.Minute))
+                {
+                    <li style="display:flex; gap:12px; align-items:center; padding: 10px 0; border-bottom: 1px solid var(--line);">
+                        <strong style="width:40px; color:var(--blue);">@ev.Minute'</strong>
+                        <span>@ev.Icon @ev.Description (@ev.TeamName)</span>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+
+    <!-- Sağ Panel: Olay Kayıtları Tablosu -->
+    <div class="card-a" style="padding: 20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <h3 style="margin:0; font-size:1.1rem; display:flex; align-items:center; gap:8px;">
+                <svg class="icon"><use href="#i-table" /></svg> Olay Kayıtları
+            </h3>
+            <span class="badge-a badge-a--inactive">@(Model.Events?.Count ?? 0) Kayıt</span>
+        </div>
+
+        <div class="table-scroll">
+            <table class="match-table">
+                <thead>
+                    <tr>
+                        <th>Dk.</th>
+                        <th>Tür</th>
+                        <th>Takım</th>
+                        <th>Detay</th>
+                        <th style="text-align:right;">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Events == null || !Model.Events.Any())
+                    {
+                        <tr class="table-empty">
+                            <td colspan="5">
+                                <strong>Kayıt bulunamadı</strong>
+                                "Olay Ekle" butonunu kullanarak bu müsabakaya gol, kart ve değişiklik girebilirsiniz.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var ev in Model.Events)
+                        {
+                            <tr>
+                                <td>@ev.Minute'</td>
+                                <td>@ev.Type</td>
+                                <td>@ev.TeamName</td>
+                                <td>@ev.Description</td>
+                                <td style="text-align:right;">
+                                    <a href="/Admin/Match/DeleteEvent/@ev.Id?type=@ev.Type" class="act-btn act-btn--danger" title="Sil">
+                                        <svg class="icon"><use href="#i-trash" /></svg>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ========================================================= -->
+<!-- OLAY EKLE MODALI (Görsel 2, 4, 5) -->
+<!-- ========================================================= -->
+<dialog class="modal-a" id="event-modal">
+    <form asp-area="Admin" asp-controller="Match" asp-action="AddEvent" method="post">
+        <input type="hidden" name="MatchId" value="@Model.MatchId" />
+
+        <div class="modal-head">
+            <h2 class="modal-title">Olay Ekle</h2>
+            <button type="button" class="icon-btn" onclick="document.getElementById('event-modal').close()">
+                <svg class="icon"><use href="#i-x" /></svg>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-grid">
+                <!-- 1. Olay Türü Dropdown -->
+                <div class="form-field">
+                    <label class="field-label">Olay Türü</label>
+                    <select class="select-a" name="EventType" id="ev-type" onchange="onEventTypeChange()">
+                        <option value="Goal">⚽ Gol</option>
+                        <option value="Card">🟨 / 🟥 Kart</option>
+                        <option value="Substitution">🔄 Oyuncu Değişikliği</option>
+                    </select>
+                </div>
+
+                <!-- 2. Takım Dropdown (Ev Sahibi mi Deplasman mı - Görsel 2) -->
+                <div class="form-field">
+                    <label class="field-label">Takım <span class="req">*</span></label>
+                    <select class="select-a" name="TeamId" id="ev-team" onchange="onTeamChange()">
+                        <option value="">Takım seçiniz</option>
+                        <option value="@Model.HomeTeamId" data-team="@Model.HomeTeamName">@Model.HomeTeamName (Ev Sahibi)</option>
+                        <option value="@Model.AwayTeamId" data-team="@Model.AwayTeamName">@Model.AwayTeamName (Deplasman)</option>
+                    </select>
+                </div>
+
+                <!-- ALAN A: GOL İSE (Görsel 2) -->
+                <div class="form-field span-2 event-section" id="sec-goal">
+                    <label class="field-label">Golü Atan Oyuncu <span class="req">*</span></label>
+                    <select class="select-a player-dropdown" name="ScorerPlayerName" id="p-goal">
+                        <option value="">Lütfen önce takım seçiniz...</option>
+                    </select>
+                </div>
+
+                <!-- ALAN B: KART İSE (Görsel 4) -->
+                <div class="event-section span-2" id="sec-card" style="display:none;">
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label class="field-label">Kart Gören Oyuncu <span class="req">*</span></label>
+                            <select class="select-a player-dropdown" name="CardPlayerName" id="p-card">
+                                <option value="">Lütfen önce takım seçiniz...</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label class="field-label">Kart Türü</label>
+                            <select class="select-a" name="CardType">
+                                <option value="Yellow">🟨 Sarı Kart</option>
+                                <option value="Red">🟥 Kırmızı Kart</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ALAN C: OYUNCU DEĞİŞİKLİĞİ İSE (Görsel 5) -->
+                <div class="event-section span-2" id="sec-sub" style="display:none;">
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label class="field-label">Oyuna Giren Oyuncu <span class="req">*</span></label>
+                            <select class="select-a player-dropdown" name="PlayerInName" id="p-in">
+                                <option value="">Lütfen önce takım seçiniz...</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label class="field-label">Oyundan Çıkan Oyuncu <span class="req">*</span></label>
+                            <select class="select-a player-dropdown" name="PlayerOutName" id="p-out">
+                                <option value="">Lütfen önce takım seçiniz...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dakika (Tüm olaylar için ortak) -->
+                <div class="form-field span-2">
+                    <label class="field-label">Dakika <span class="req">*</span></label>
+                    <input class="input-a" name="Minute" type="number" min="1" max="130" placeholder="örn. 67" required>
+                    <p class="field-hint">1-120 veya duraklama dakikası</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-foot">
+            <button type="button" class="btn-a btn-a--secondary" onclick="document.getElementById('event-modal').close()">Vazgeç</button>
+            <button type="submit" class="btn-a btn-a--primary">Kaydet</button>
+        </div>
+    </form>
+</dialog>
+
+<script src="~/js/seriea-rosters.js"></script>
