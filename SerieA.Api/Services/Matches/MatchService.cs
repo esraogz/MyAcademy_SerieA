@@ -29,7 +29,7 @@ namespace SerieA.WebApi.Services.Matches
                 throw new BadRequestException($"{conflictingTeamName} takımının {createMatchDto.Week}. haftada zaten kayıtlı bir maçı var!");
             }
 
-            if(createMatchDto.Status == "Finished" &&  (createMatchDto.HomeScore != null || createMatchDto.AwayScore != null))
+            if(createMatchDto.Status == "Finished" &&  (createMatchDto.HomeScore == null || createMatchDto.AwayScore == null))
             {
                 throw new BadRequestException("Tamamlandı durumunda ev sahibi ve deplasman takımın skorları boş geçilemez");
             }
@@ -68,6 +68,10 @@ namespace SerieA.WebApi.Services.Matches
                                               .Include(x => x.AwayTeam)
                                               .FirstOrDefaultAsync(x => x.MatchId == id);
             var value = _mapper.Map<ResultMatchDto>(match);
+            if (value == null)
+            {
+                throw new NotFoundException($"{id} sine sahip bir maç bulunamadı");
+            }
             return value;
         }
 

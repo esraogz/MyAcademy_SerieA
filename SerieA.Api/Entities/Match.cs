@@ -26,9 +26,9 @@ namespace SerieA.Api.Entities
         public Team AwayTeam { get; set; }
         public int AwayTeamId { get; set; }
 
-        public List<MatchCard> MatchCards { get; set; }
-        public List<MatchGoal> MatchGoals { get; set; }
-        public List<MatchSubstitution> MatchSubstitutions { get; set; }
+        public List<MatchCard> MatchCards { get; set; } = new();
+        public List<MatchGoal> MatchGoals { get; set; } = new();
+        public List<MatchSubstitution> MatchSubstitutions { get; set; } = new();
         public MatchStatistic? MatchStatistic { get; set; }  //İstatistik özeti her maçta 1 tane. O yüzden List şeklinde tutmuyoruz.
 
 

@@ -1,8 +1,10 @@
-﻿using SerieA.WebApi.DTOs.MatchCardDtos;
+﻿using SerieA.Api.Entities;
+using SerieA.WebApi.DTOs.MatchCardDtos;
 using SerieA.WebApi.DTOs.MatchEventItemDtos;
 using SerieA.WebApi.DTOs.MatchGoalDtos;
 using SerieA.WebApi.DTOs.MatchStatisticDtos;
 using SerieA.WebApi.DTOs.MatchSubstitutionDtos;
+using System.Linq;
 
 namespace SerieA.WebApi.DTOs.MatchDetailDtos
 {
@@ -10,6 +12,7 @@ namespace SerieA.WebApi.DTOs.MatchDetailDtos
     {
         public int MatchId { get; set; }
         public int Week { get; set; }
+        public string Season { get; set; }
         public DateTime MatchDate { get; set; }
         public string Stadium { get; set; }
         public int? HomeScore { get; set; }
@@ -45,7 +48,7 @@ namespace SerieA.WebApi.DTOs.MatchDetailDtos
         public ResultMatchStatisticDto? MatchStatistic { get; set; }
 
         public List<MatchEventItemDto> Events =>
-            MatchGoals.Select(g => new MatchEventItemDto
+            (MatchGoals ?? new()).Select(g => new MatchEventItemDto
             {
                 Id = g.Id,
                 Minute = g.Minute,
@@ -54,7 +57,7 @@ namespace SerieA.WebApi.DTOs.MatchDetailDtos
                 TeamName = g.TeamId == HomeTeamId ? HomeTeamName : AwayTeamName,
                 Description = string.IsNullOrEmpty(g.AssistPlayerName) ? g.PlayerName : $"{g.PlayerName} (Asist: {g.AssistPlayerName})"
             })
-            .Concat(MatchCards.Select(c => new MatchEventItemDto
+            .Concat((MatchCards ?? new()).Select(c => new MatchEventItemDto
             {
                 Id = c.Id,
                 Minute = c.Minute,
@@ -63,7 +66,7 @@ namespace SerieA.WebApi.DTOs.MatchDetailDtos
                 TeamName = c.TeamId == HomeTeamId ? HomeTeamName : AwayTeamName,
                 Description = c.PlayerName
             }))
-            .Concat(MatchSubstitutions.Select(s => new MatchEventItemDto
+            .Concat((MatchSubstitutions ?? new ()).Select(s => new MatchEventItemDto
             {
                 Id = s.Id,
                 Minute = s.Minute,

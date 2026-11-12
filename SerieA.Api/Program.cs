@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SerieA.WebApi.Context;
 using SerieA.WebApi.Exceptions;
 using SerieA.WebApi.Mapping;
+using SerieA.WebApi.Services.Events;
 using SerieA.WebApi.Services.MatchDetails;
 using SerieA.WebApi.Services.Matches;
 using SerieA.WebApi.Services.Teams;
@@ -14,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<ITeamService, TeamService>();
 builder.Services.AddScoped<IMatchService, MatchService>();
 builder.Services.AddScoped<IMatchDetailService, MatchDetailService>();
+builder.Services.AddScoped<IEventService, EventService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {

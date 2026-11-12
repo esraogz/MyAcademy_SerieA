@@ -64,12 +64,12 @@ namespace SerieA.WebApi.Services.Teams
 
         public async Task UpdateTeamAsync(UpdateTeamDto updateTeamDto)
         {
-            bool isTeamExist = await _context.Teams.AnyAsync(x => x.Name != updateTeamDto.Name &&
+            bool isTeamExist = await _context.Teams.AnyAsync(x => x.TeamId != updateTeamDto.TeamId &&
                                                            (x.Name.ToLower() == updateTeamDto.Name.Trim().ToLower() ||
                                                             x.ShortName.ToLower() == updateTeamDto.ShortName.Trim().ToLower()));
             if (isTeamExist)
             {
-                throw new BadRequestException($" Eklemeye çalıştığınız {updateTeamDto.Name} takımı veya {updateTeamDto.ShortName} kodu listede zaten mevcut");
+                throw new BadRequestException($"Güncellemeye çalıştığınız {updateTeamDto.Name} takımı veya {updateTeamDto.ShortName} kodu listede zaten mevcut");
             }
 
             if (updateTeamDto.IsActive)

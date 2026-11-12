@@ -16,8 +16,8 @@
         public bool IsActive { get; set; }
 
 
-        public List<Match> HomeMatches { get; set; }
-        public List<Match> AwayMatches { get; set; }
+        public List<Match> HomeMatches { get; set; } = new();
+        public List<Match> AwayMatches { get; set; } = new();
 
     }
 }

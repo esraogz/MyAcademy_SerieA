@@ -1,6 +1,7 @@
 using FluentValidation;
 using SerieA.WebUI.Options;
 using SerieA.WebUI.Services;
+using SerieA.WebUI.Services.Events;
 using SerieA.WebUI.Services.MatchDetails;
 using SerieA.WebUI.Services.Matches;
 using SerieA.WebUI.Services.TeamServices;
@@ -25,6 +26,11 @@ builder.Services.AddHttpClient<IMatchService, MatchService>((sp, client) =>
 });
 
 builder.Services.AddHttpClient<IMatchDetailService, MatchDetailService>((sp, client) =>
+{
+    client.BaseAddress = new Uri(apiOptions.BaseUrl);
+});
+
+builder.Services.AddHttpClient<IEventService, EventService>((sp, client) =>
 {
     client.BaseAddress = new Uri(apiOptions.BaseUrl);
 });
