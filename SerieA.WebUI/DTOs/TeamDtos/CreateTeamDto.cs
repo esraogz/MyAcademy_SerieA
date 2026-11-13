@@ -12,6 +12,6 @@
         public string? ColorA { get; set; }
         public string? ColorB { get; set; }
         public string? LogoUrl { get; set; }
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
     }
 }

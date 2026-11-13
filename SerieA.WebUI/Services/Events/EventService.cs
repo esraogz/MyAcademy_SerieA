@@ -25,7 +25,7 @@ namespace SerieA.WebUI.Services.Events
             }
 
             var error = await response.Content.ReadFromJsonAsync<ApiErrorDto>();
-            return error?.Message ?? "İşlem sırasında bir hata oluştu";
+            return error?.Detail ?? "İşlem sırasında bir hata oluştu";
         }
     }
 

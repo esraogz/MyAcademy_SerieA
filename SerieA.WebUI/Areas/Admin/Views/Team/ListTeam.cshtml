@@ -190,10 +190,7 @@
             </button>
         </div>
         <div class="modal-body">
-            @if (ViewBag.ApiError != null)
-            {
-                <div class="form-alert is-visible">⚠️ @ViewBag.ApiError</div>
-            }
+            @Html.ValidationSummary(true, "", new { @class = "form-alert is-visible" })
             <div class="form-grid">
                 <div class="form-field">
                     <label class="field-label">Takım Adı <span class="req">*</span></label>
@@ -278,10 +275,7 @@
             </button>
         </div>
         <div class="modal-body">
-            @if (ViewBag.ApiError != null)
-            {
-                <div class="form-alert is-visible">⚠️ @ViewBag.ApiError</div>
-            }
+            @Html.ValidationSummary(true, "", new { @class = "form-alert is-visible" })
             <input type="hidden" name="TeamId" id="u-id">
 
             <div class="form-grid">
@@ -382,11 +376,11 @@
     }
      @if (ViewBag.OpenCreateModal == true)
     {
-                        <text>document.getElementById('create-modal').showModal();</text>
+            <text>document.getElementById('create-modal').showModal();</text>
     }
     @if (ViewBag.OpenUpdateModal == true)
     {
-                        <text>document.getElementById('update-modal').showModal();</text>
+            <text>document.getElementById('update-modal').showModal();</text>
     }
 
 

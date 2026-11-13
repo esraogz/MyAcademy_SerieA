@@ -1,12 +1,9 @@
-using FluentValidation;
 using SerieA.WebUI.Options;
 using SerieA.WebUI.Services;
 using SerieA.WebUI.Services.Events;
 using SerieA.WebUI.Services.MatchDetails;
 using SerieA.WebUI.Services.Matches;
 using SerieA.WebUI.Services.TeamServices;
-using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,8 +34,6 @@ builder.Services.AddHttpClient<IEventService, EventService>((sp, client) =>
 
 builder.Services.AddScoped<TeamViewModelService>();
 
-builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 

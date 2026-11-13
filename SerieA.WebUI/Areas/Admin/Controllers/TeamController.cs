@@ -1,10 +1,8 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
-using SerieA.WebUI.Areas.Admin.Models;
+﻿using Microsoft.AspNetCore.Mvc;
 using SerieA.WebUI.DTOs.TeamDtos;
+using SerieA.WebUI.Extensions;
 using SerieA.WebUI.Services;
 using SerieA.WebUI.Services.TeamServices;
-using System.Configuration;
 
 namespace SerieA.WebUI.Areas.Admin.Controllers
 {
@@ -21,14 +19,14 @@ namespace SerieA.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTeam(CreateTeamDto createTeamDto)
         {
-            var model = await _teamViewModelService.BuildListViewModelAsync();
-            var apiError = await _teamService.CreateTeamAsync(createTeamDto);
-            if (apiError != null)
+            
+            var result = await _teamService.CreateTeamAsync(createTeamDto);
+            if (!result.IsSuccess)
             {
-                ViewBag.ApiError = apiError;
+                ModelState.Clear();
+                ModelState.AddApiErrors(result);
                 ViewBag.OpenCreateModal = true;
-                
-                return View("ListTeam", model);
+                return View("ListTeam", await _teamViewModelService.BuildListViewModelAsync());
             }
             return RedirectToAction(nameof(ListTeam));
         }
@@ -36,24 +34,24 @@ namespace SerieA.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateTeam(UpdateTeamDto updateTeamDto)
         {
-            var apiError = await _teamService.UpdateTeamAsync(updateTeamDto);
-            var model = await _teamViewModelService.BuildListViewModelAsync();
-            if (apiError != null)
+            var result = await _teamService.UpdateTeamAsync(updateTeamDto);
+            
+            if (!result.IsSuccess)
             {
-                ViewBag.ApiError = apiError;
-                ViewBag.OpenCreateModal = true;
-                
-                return View("ListTeam", model); //RedirectToAction dersek viewbag ile taşıdığımız tüm veriler silinir o yüzden return view dedik.
+                ModelState.Clear();
+                ModelState.AddApiErrors(result);
+                ViewBag.OpenUpdateModal = true;
+                return View("ListTeam", await _teamViewModelService.BuildListViewModelAsync()); //RedirectToAction dersek viewbag ile taşıdığımız tüm veriler silinir o yüzden return view dedik.
             }
             return RedirectToAction(nameof(ListTeam));
         }
 
         public async Task<IActionResult> DeleteTeam(int id)
         {
-            var apiError = await _teamService.DeleteTeamAsync(id);
-            if (apiError != null)
+            var result = await _teamService.DeleteTeamAsync(id);
+            if (!result.IsSuccess)
             {
-                TempData["DeleteError"] = apiError; // Sayfa yenilenirken hatayı taşır
+                TempData["DeleteError"] = result.Message; // Sayfa yenilenirken hatayı taşır
             }
             return RedirectToAction(nameof(ListTeam));
         }
