@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
-using System.Net;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SerieA.WebApi.Exceptions
 {
@@ -7,23 +7,26 @@ namespace SerieA.WebApi.Exceptions
     {
         public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
         {
-            if (exception is not NotFoundException && exception is not BadRequestException)
+            var (statusCode, title) = exception switch
             {
-                return false;
-            }
-            httpContext.Response.StatusCode = exception switch
-            {
-                NotFoundException => (int)HttpStatusCode.NotFound, //404
-                BadRequestException => (int)HttpStatusCode.BadRequest, //400
+                NotFoundException => (StatusCodes.Status404NotFound, "Kayıt bulunamadı"),
+                BadRequestException => (StatusCodes.Status400BadRequest, "Geçersiz istek"),
+                _ => (0, null)
             };
 
-            await httpContext.Response.WriteAsJsonAsync(new
+            if (statusCode == 0) return false;
+
+            httpContext.Response.StatusCode = statusCode;
+
+            await httpContext.Response.WriteAsJsonAsync(new ProblemDetails
             {
-                StatusCode = httpContext.Response.StatusCode,
-                Message = exception.Message  
-            }, cancellationToken);
+                Status = statusCode,
+                Title = title,
+                Detail = exception.Message
+            }, options: null, contentType: "application/problem+json", cancellationToken);
 
             return true;
         }
     }
+
 }

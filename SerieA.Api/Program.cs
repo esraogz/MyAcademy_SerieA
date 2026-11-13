@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SerieA.WebApi.Context;
@@ -7,6 +8,8 @@ using SerieA.WebApi.Services.Events;
 using SerieA.WebApi.Services.MatchDetails;
 using SerieA.WebApi.Services.Matches;
 using SerieA.WebApi.Services.Teams;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,13 +27,21 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfile).Assembly);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    // Non-nullable string alanlar için otomatik İngilizce "The X field is required." hatası üretilmesin;
+    // doğrulama mesajlarının tek kaynağı FluentValidation (Türkçe) olsun.
+    options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 
