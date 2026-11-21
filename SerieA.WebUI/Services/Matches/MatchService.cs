@@ -1,21 +1,23 @@
 ﻿using SerieA.WebUI.DTOs.ErrorDtos;
 using SerieA.WebUI.DTOs.MatchDtos;
+using SerieA.WebUI.DTOs.Results;
+using SerieA.WebUI.Extensions;
 using System.Reflection.Metadata.Ecma335;
 
 namespace SerieA.WebUI.Services.Matches
 {
     public class MatchService(HttpClient _httpClient) : IMatchService
     {
-        public async Task<string?> CreateMatchAsync(CreateMatchDto createMatchDto)
+        public async Task<ApiResult> CreateMatchAsync(CreateMatchDto createMatchDto)
         {
             var response = await _httpClient.PostAsJsonAsync("Matches/CreateMatch", createMatchDto);
-            return await ReadErrorAsync(response);
+            return await response.ToApiResultAsync();
         }
 
-        public async Task<string?> DeleteMatchAsync(int id)
+        public async Task<ApiResult?> DeleteMatchAsync(int id)
         {
             var response = await _httpClient.DeleteAsync($"Matches/{id}");
-            return await ReadErrorAsync(response);
+            return await response.ToApiResultAsync();
         }
 
         public async Task<List<ResultMatchDto>> GetAllMatchesAsync()
@@ -29,20 +31,15 @@ namespace SerieA.WebUI.Services.Matches
             return await _httpClient.GetFromJsonAsync<ResultMatchDto>($"Matches/GetMatch/{id}");
         }
 
-        public async Task<string?> UpdateMatchAsync(UpdateMatchDto updateMatchDto)
+        public async Task<List<ResultMatchDto>> GetMatchesByWeekAsync(int week)
         {
-            var response = await _httpClient.PutAsJsonAsync("Matches/UpdateMatch", updateMatchDto);
-            return await ReadErrorAsync(response);
+            return await _httpClient.GetFromJsonAsync<List<ResultMatchDto>>($"Matches/GetMatches/{week}");
         }
 
-        private async Task<string?> ReadErrorAsync(HttpResponseMessage response)
+        public async Task<ApiResult?> UpdateMatchAsync(UpdateMatchDto updateMatchDto)
         {
-            if(response.IsSuccessStatusCode)
-            {
-                return null;
-            }
-            var error = await response.Content.ReadFromJsonAsync<ApiErrorDto>();
-            return error?.Detail ?? "İşlem sırasında bir hata oluştu";
+            var response = await _httpClient.PutAsJsonAsync("Matches/UpdateMatch", updateMatchDto);
+            return await response.ToApiResultAsync();
         }
     }
 }

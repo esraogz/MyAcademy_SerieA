@@ -183,10 +183,7 @@
             <button type="button" class="icon-btn" onclick="document.getElementById('create-match-modal').close()"><svg class="icon"><use href="#i-x" /></svg></button>
         </div>
         <div class="modal-body">
-            @if (TempData["CreateMatchError"] != null)
-            {
-                <div class="form-alert is-visible" style="margin: 12px 16px;">⚠️ @TempData["CreateMatchError"]</div>
-            }
+            @Html.ValidationSummary(true, "", new { @class = "form-alert is-visible" })
             <div class="form-grid">
                 <div class="form-field">
                     <label class="field-label">Hafta <span class="req">*</span></label>
@@ -196,6 +193,7 @@
                             <option value="@i">@i. Hafta</option>
                         }
                     </select>
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("Week")</span>
                 </div>
                 <div class="form-field">
                     <label class="field-label">Maç Durumu</label>
@@ -205,10 +203,11 @@
                         <option value="Finished">Tamamlandı</option>
                         <option value="Postponed">Ertelendi</option>
                     </select>
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("Status")</span>
                 </div>
                 <div class="form-field">
                     <label class="field-label">Ev Sahibi Takım <span class="req">*</span></label>
-                    <select class="select-a" name="HomeTeamId" id="c-home" required>
+                    <select class="select-a" name="HomeTeamId" id="c-home">
                         <option value="">Takım seçin</option>
                         @if (ViewBag.Teams != null)
                         {
@@ -218,10 +217,11 @@
                             }
                         }
                     </select>
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("HomeTeamId")</span>
                 </div>
                 <div class="form-field">
                     <label class="field-label">Deplasman Takımı <span class="req">*</span></label>
-                    <select class="select-a" name="AwayTeamId" id="c-away" required>
+                    <select class="select-a" name="AwayTeamId" id="c-away">
                         <option value="">Takım seçin</option>
                         @if (ViewBag.Teams != null)
                         {
@@ -231,10 +231,12 @@
                             }
                         }
                     </select>
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("AwayTeamId")</span>
                 </div>
                 <div class="form-field">
                     <label class="field-label">Maç Tarihi <span class="req">*</span></label>
                     <input class="input-a" name="MatchDateOnly" type="date">
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("MatchDate")</span>
                 </div>
                 <div class="form-field">
                     <label class="field-label">Maç Saati <span class="req">*</span></label>
@@ -243,6 +245,7 @@
                 <div class="form-field span-2">
                     <label class="field-label">Stadyum</label>
                     <input class="input-a" name="Stadium" id="c-stadium" type="text" placeholder="Ev sahibi seçilince otomatik dolar">
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("Stadium")</span>
                 </div>
                 <div class="score-fields span-2" id="c-score-fields" style="display:none;">
                     <div class="form-grid">
@@ -275,10 +278,7 @@
             <button type="button" class="icon-btn" onclick="document.getElementById('update-match-modal').close()"><svg class="icon"><use href="#i-x" /></svg></button>
         </div>
         <div class="modal-body">
-            @if (TempData["UpdateMatchError"] != null)
-            {
-                <div class="form-alert is-visible">⚠️ @TempData["UpdateMatchError"]</div>
-            }
+            @Html.ValidationSummary(true, "", new { @class = "form-alert is-visible" })
             <input type="hidden" name="MatchId" id="u-id">
             <div class="form-grid">
                 <div class="form-field">
@@ -289,6 +289,7 @@
                             <option value="@i">@i. Hafta</option>
                         }
                     </select>
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("Week")</span>
                 </div>
                 <div class="form-field">
                     <label class="field-label">Maç Durumu</label>
@@ -298,6 +299,7 @@
                         <option value="Finished">Tamamlandı</option>
                         <option value="Postponed">Ertelendi</option>
                     </select>
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("Status")</span>
                 </div>
                 <div class="form-field">
                     <label class="field-label">Ev Sahibi Takım <span class="req">*</span></label>
@@ -310,6 +312,7 @@
                             }
                         }
                     </select>
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("HomeTeamId")</span>
                 </div>
                 <div class="form-field">
                     <label class="field-label">Deplasman Takımı <span class="req">*</span></label>
@@ -322,10 +325,12 @@
                             }
                         }
                     </select>
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("AwayTeamId")</span>
                 </div>
                 <div class="form-field">
                     <label class="field-label">Maç Tarihi <span class="req">*</span></label>
                     <input class="input-a" name="MatchDateOnly" id="u-date" type="date" required>
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("MatchDate")</span>
                 </div>
                 <div class="form-field">
                     <label class="field-label">Maç Saati <span class="req">*</span></label>
@@ -334,6 +339,7 @@
                 <div class="form-field span-2">
                     <label class="field-label">Stadyum</label>
                     <input class="input-a" name="Stadium" id="u-stadium" type="text">
+                    <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("Stadium")</span>
                 </div>
                 <div class="score-fields span-2" id="u-score-fields" style="display:none;">
                     <div class="form-grid">
@@ -375,10 +381,13 @@
 
 <script>
     function openCreateMatchModal() {
-        document.getElementById('create-match-modal').showModal();
+        openCleanModal(document.getElementById('create-match-modal'), true);
+        toggleScore('c');   // form sıfırlandıktan sonra skor kutularını duruma göre eşitle
     }
 
     function openUpdateMatchModal(btn) {
+        const updateModal = document.getElementById('update-match-modal');
+        clearModalErrors(updateModal);
         document.getElementById('u-id').value = btn.dataset.id;
         document.getElementById('u-week').value = btn.dataset.week;
         document.getElementById('u-home').value = btn.dataset.hometeamid;
@@ -391,7 +400,7 @@
         document.getElementById('u-awayscore').value = btn.dataset.awayscore || '';
 
         toggleScore('u');
-        document.getElementById('update-match-modal').showModal();
+        updateModal.showModal();
     }
 
     function openDeleteModal(id, name) {
@@ -416,24 +425,14 @@
         document.getElementById('c-stadium').value = selected.dataset.stadium || '';
     });
 
-        // 1. Hata varsa ilgili popup'ı otomatik aç:
-    @if (TempData["CreateMatchError"] != null)
+     @if (ViewBag.OpenCreateModal == true)
     {
-            <text>openCreateMatchModal();</text>
+                    <text>document.getElementById('create-match-modal').showModal();</text>
     }
-    @if (TempData["UpdateMatchError"] != null)
+    @if (ViewBag.OpenUpdateModal == true)
     {
-            <text>
-            const editBtn = document.querySelector('button[data-id="@TempData["UpdateMatchId"]"]');
-            if (editBtn) openUpdateMatchModal(editBtn);
-            </text>
+                    <text>document.getElementById('update-match-modal').showModal();</text>
     }
 
-    // 2. Popup kapandığı anda (X, Vazgeç veya ESC) içindeki hata mesajlarını temizle:
-    document.querySelectorAll('.modal-a').forEach(modal => {
-        modal.addEventListener('close', () => {
-            modal.querySelectorAll('.form-alert, .field-validation-error').forEach(el => el.remove());
-        });
-    });
-</script>
+    // Popup kapanınca hata temizliği wwwroot/js/admin-modal.js içinde yapılır.
 </script>

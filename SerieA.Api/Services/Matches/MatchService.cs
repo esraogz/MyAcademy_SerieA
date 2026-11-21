@@ -75,6 +75,15 @@ namespace SerieA.WebApi.Services.Matches
             return value;
         }
 
+        public async Task<List<ResultMatchDto>> GetMatchesByWeekAsync(int week)
+        {
+            var matches =await _context.Matches.Include(x => x.HomeTeam)
+                                               .Include(x => x.AwayTeam)
+                                               .Where(x => x.Week == week).ToListAsync();
+            var result = _mapper.Map<List<ResultMatchDto>>(matches);
+            return result;
+        }
+
         public async Task UpdateMatchAsync(UpdateMatchDto updateMatchDto)
         {
             var existingMatch = await _context.Matches.Include(x => x.HomeTeam).

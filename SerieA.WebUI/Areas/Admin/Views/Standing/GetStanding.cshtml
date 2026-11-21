@@ -1,0 +1,72 @@
+﻿@model List<ResultStandingDto>
+@{
+    ViewData["Title"] = "GetStanding";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="page-head">
+    <div>
+        <span class="page-eyebrow">Serie A 2026/27</span>
+        <h1 class="page-title">Puan Durumu</h1>
+        <p class="page-desc">Tamamlanan maçlardan hesaplanır. Skor girildikçe tablo kendiliğinden güncellenir.</p>
+    </div>
+</div>
+
+<section class="card-a" aria-label="Puan durumu">
+    <div class="table-scroll">
+        <table class="standings-table">
+            <thead>
+                <tr>
+                    <th scope="col" class="pos">#</th>
+                    <th scope="col">Takım</th>
+                    <th scope="col" class="num">O</th>
+                    <th scope="col" class="num">G</th>
+                    <th scope="col" class="num">B</th>
+                    <th scope="col" class="num">M</th>
+                    <th scope="col" class="num">AG</th>
+                    <th scope="col" class="num">YG</th>
+                    <th scope="col" class="num">AV</th>
+                    <th scope="col" class="num">P</th>
+                    <th scope="col">Son 5</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    var zone = item.Position <= 4 ? "zone-cl"
+                    : item.Position <= 6 ? "zone-el"
+                    : item.Position > Model.Count - 3 ? "zone-rel"
+                    : "";
+                    <tr class="@zone">
+                        <td class="pos">@item.Position</td> 
+                        <td><div class="team-cell"><span class="team-crest" style="--crest-a:@item.ColorA; --crest-b:@item.ColorB; --crest-ink:#FFFFFF;">@item.ShortName</span><span class="team-name">@item.TeamName</span></div></td>
+                        <td class="num">@item.Played</td>
+                        <td class="num">@item.Won</td>
+                        <td class="num">@item.Drawn</td>
+                        <td class="num">@item.Lost</td>
+                        <td class="num">@item.GoalsFor</td>
+                        <td class="num">@item.GoalsAgainst</td>
+                        <td class="num">@item.GoalDifference</td>
+                        <td class="num pts">@item.Points</td>
+                        <td>
+                            <span class="form-dots">
+                                @foreach (var f in item.Form)
+                                {
+                                    var letter = f switch { "W" => "G", "D" => "B", _ => "M" };
+                                    <span class="form-dot form-dot--@f">@letter</span>
+                                }
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="legend">
+        <span><i style="background:var(--blue)"></i>Şampiyonlar Ligi (1-4)</span>
+        <span><i style="background:var(--it-green)"></i>Avrupa Ligi (5-6)</span>
+        <span><i style="background:var(--it-red)"></i>Düşme hattı (18-20)</span>
+        <span>O oynanan · G galibiyet · B beraberlik · M mağlubiyet · AG atılan gol · YG yenilen gol · AV averaj · P puan</span>
+    </div>
+</section>
+

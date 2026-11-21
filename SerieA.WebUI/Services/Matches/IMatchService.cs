@@ -1,4 +1,5 @@
 ﻿using SerieA.WebUI.DTOs.MatchDtos;
+using SerieA.WebUI.DTOs.Results;
 
 namespace SerieA.WebUI.Services.Matches
 {
@@ -6,8 +7,9 @@ namespace SerieA.WebUI.Services.Matches
     {
         Task<List<ResultMatchDto>> GetAllMatchesAsync();
         Task<ResultMatchDto> GetMatchByIdAsync(int id);
-        Task<string?> CreateMatchAsync(CreateMatchDto createMatchDto);
-        Task<string?> UpdateMatchAsync(UpdateMatchDto updateMatchDto);
-        Task<string?> DeleteMatchAsync(int id);
+        Task<ApiResult?> CreateMatchAsync(CreateMatchDto createMatchDto);
+        Task<ApiResult?> UpdateMatchAsync(UpdateMatchDto updateMatchDto);
+        Task<ApiResult?> DeleteMatchAsync(int id);
+        Task<List<ResultMatchDto>> GetMatchesByWeekAsync(int week);
     }
 }

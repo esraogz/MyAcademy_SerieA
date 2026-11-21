@@ -17,7 +17,6 @@
     </button>
 </div>
 
-<!-- 2. LİG ÖZETİ ŞERİDİ (Buradaki sabit sayıları LINQ ile dinamikleştireceksin) -->
 <section class="league-strip" aria-label="Lig özeti">
     <div class="strip-item strip-item--green">
         <span class="strip-icon"><svg class="icon"><use href="#i-shield" /></svg></span>
@@ -353,13 +352,10 @@
 <script>
 
     function openCreateModal() {
-        const modal = document.getElementById('create-modal');
-        modal.querySelector('form').reset();
-        modal.querySelectorAll('.field-validation-error').forEach(el => el.textContent = '');
-        modal.showModal();
+        openCleanModal(document.getElementById('create-modal'), true);
     }
     function openUpdateModal(btn) {
-        document.querySelectorAll('#update-modal .field-validation-error').forEach(el => el.textContent = '');
+        clearModalErrors(document.getElementById('update-modal'));
         document.getElementById('u-id').value = btn.dataset.id;
         document.getElementById('u-name').value = btn.dataset.name;
         document.getElementById('u-shortname').value = btn.dataset.shortname;
@@ -383,6 +379,7 @@
             <text>document.getElementById('update-modal').showModal();</text>
     }
 
+    // Popup kapanınca hata temizliği wwwroot/js/admin-modal.js içinde yapılır.
 
 </script>
 

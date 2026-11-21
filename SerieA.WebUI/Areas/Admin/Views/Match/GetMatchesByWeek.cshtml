@@ -1,0 +1,70 @@
+﻿@model List<ResultMatchDto>
+@{
+    ViewData["Title"] = "GetMatchesByWeek";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="page-head">
+    <div>
+        <span class="page-eyebrow">Serie A 2026/27</span>
+        <h1 class="page-title">Haftalık Fikstür</h1>
+        <p class="page-desc">Bir haftanın tüm karşılaşmalarını görün, maç detayına geçin veya haftaya yeni maç ekleyin.</p>
+    </div>
+</div>
+
+<section class="card-a" aria-label="Haftalık fikstür">
+    @{ int week = ViewBag.Week ?? 1; }
+    <div class="week-pager">
+        <a class="btn-a btn-a--ghost" asp-action="GetMatchesByWeek" asp-route-week="@(week - 1)" aria-disabled="@(week <= 1 ? "true" : "false")">‹ Önceki</a>
+        <div class="week-pager__label">@week. Hafta<small>@Model.Count maç</small></div>
+        <a class="btn-a btn-a--ghost" asp-action="GetMatchesByWeek" asp-route-week="@(week + 1)" aria-disabled="@(week >= 38 ? "true" : "false")">Sonraki ›</a>
+    </div>
+
+    <nav class="week-chips" aria-label="Hafta seç">
+        @for (int w = 1; w <= 38; w++)
+        {
+            <a class="week-chip @(w == week ? "is-current" : "")" asp-action="GetMatchesByWeek" asp-route-week="@w">@w</a>
+        }
+    </nav>
+
+        <div class="match-cards">
+        @foreach (var item in Model)
+        {
+            var statusBadge = item.Status switch
+            {
+                "Finished" => "badge-a--Finished",
+                "Live" => "badge-a--Live",
+                "Postponed" => "badge-a--Postponed",
+                _ => "badge-a--NotStarted"
+            };
+            var statusText = item.Status switch
+            {
+                "Finished" => "Tamamlandı",
+                "Live" => "Canlı",
+                "Postponed" => "Ertelendi",
+                _ => "Başlamadı"
+            };
+            <article class="match-card">
+                <div class="match-card__meta"><span>@item.MatchDate.ToString("dd.MM.yyyy · HH:mm")</span><span class="badge-a @statusBadge">@statusText</span></div>
+                <div class="match-card__teams">
+                    <span class="team"><span class="team-crest" style="--crest-a:@item.HomeTeamColorA; --crest-b:@item.HomeTeamColorB"></span>@item.HomeTeamName</span>
+                    @if (item.Status == "Live" || item.Status == "Finished")
+                    {
+                        <span class="score">@item.HomeScore - @item.AwayScore</span>
+                    }
+                    else
+                    {
+                        <span class="score score--empty">-</span>
+                    }
+                    <span class="team"><span class="team-crest" style="--crest-a:@item.AwayTeamColorA; --crest-b:@item.AwayTeamColorB"></span>@item.AwayTeamName</span>
+                </div>
+                <div class="match-card__foot">
+                    <span><svg class="icon" aria-hidden="true"><use href="#i-stadium" /></svg>@item.Stadium</span>
+                    <a class="act-btn" asp-area="Admin" asp-controller="MatchDetail" asp-action="MatchDetail" asp-route-id="@item.MatchId" title="Maç detayı"><svg class="icon"><use href="#i-eye" /></svg></a>
+                </div>
+            </article>
+        }
+        </div>
+   
+</section>
+<!-- ======== SAYFA İÇERİĞİ BİTİŞ ======== -->

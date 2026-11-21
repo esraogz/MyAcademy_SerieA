@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Puan Durumu | Serie A Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/admin.css">
+    <link rel="stylesheet" href="assets/pages.css">
+</head>
+<body class="admin">
+    <!-- ===== cshtml: _AdminIconSetPartial ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8.5a1.5 1.5 0 0 1-1.5 1.5H15v-6H9v6H5.5A1.5 1.5 0 0 1 4 19.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" /></symbol>
+    <symbol id="i-ball" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8" /><path d="M12 7.6l3.3 2.4-1.3 3.8h-4l-1.3-3.8z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" /></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" /></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8" /><path d="M3.5 10h17M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></symbol>
+    <symbol id="i-table" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16M9 4v16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.5" fill="none" stroke="currentColor" stroke-width="1.8" /><path d="M3 19.5c.7-3 3.1-4.8 6-4.8s5.3 1.8 6 4.8M16 5.2a3.4 3.4 0 0 1 0 6.6M17.5 14.9c1.8.6 3 2.2 3.5 4.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M14 4h4.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H14M10 16l-4-4 4-4M6 12h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20.5a2.2 2.2 0 0 0 4 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" /></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.8" fill="none" stroke="currentColor" stroke-width="1.8" /><path d="M4.5 20c.9-3.6 3.9-5.6 7.5-5.6s6.6 2 7.5 5.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" /></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2" /><path d="M20 20l-4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" /><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8" /></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9a2.1 2.1 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" /><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-width="1.8" /></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v5.5M14 11v5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8" /><path d="M8 12.5l2.7 2.7L16 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8" /><path d="M12 11v5M12 8h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></symbol>
+    <symbol id="i-stadium" viewBox="0 0 24 24"><ellipse cx="12" cy="9" rx="9" ry="3.5" fill="none" stroke="currentColor" stroke-width="1.8" /><path d="M3 9v6c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5V9" fill="none" stroke="currentColor" stroke-width="1.8" /></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" /><circle cx="12" cy="10" r="2.3" fill="none" stroke="currentColor" stroke-width="1.8" /></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8" /><path d="M12 7.5V12l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></symbol>
+</svg>
+
+    <!-- ===== cshtml: _AdminSidebar ===== -->
+    <aside class="admin-sidebar" id="admin-sidebar" aria-label="Yönetim menüsü">
+        <a class="sidebar-brand" href="dashboard.html">
+            <span class="brand-mark" aria-hidden="true">SA</span>
+            <span class="brand-text">Serie A Admin</span>
+        </a>
+        <p class="sidebar-label">Yönetim</p>
+        <ul class="sidebar-nav">
+        <li><a class="sidebar-link" href="dashboard.html"><svg class="icon" aria-hidden="true"><use href="#i-home" /></svg>Ana Sayfa</a></li>
+        <li><a class="sidebar-link" href="../Admin Paneli 2.html"><svg class="icon" aria-hidden="true"><use href="#i-ball" /></svg>Maçlar</a></li>
+        <li><a class="sidebar-link" href="../Admin Paneli 1.html"><svg class="icon" aria-hidden="true"><use href="#i-shield" /></svg>Takımlar</a></li>
+        <li><a class="sidebar-link" href="weeks.html"><svg class="icon" aria-hidden="true"><use href="#i-calendar" /></svg>Haftalar</a></li>
+        <li><a class="sidebar-link is-active" href="standings.html" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#i-table" /></svg>Puan Durumu</a></li>
+        <li><a class="sidebar-link" href="users.html"><svg class="icon" aria-hidden="true"><use href="#i-users" /></svg>Kullanıcılar</a></li>
+        </ul>
+        <div class="sidebar-foot">
+            <span class="sidebar-season">Sezon 2026/27</span>
+            <a class="sidebar-link sidebar-link--logout" href="#"><svg class="icon" aria-hidden="true"><use href="#i-logout" /></svg>Çıkış Yap</a>
+        </div>
+    </aside>
+
+    <div class="admin-main">
+        <!-- ===== cshtml: _AdminNavbarPartial ===== -->
+        <header class="admin-topbar">
+            <div class="topbar-left">
+                <button type="button" class="icon-btn menu-toggle" data-sidebar-toggle aria-controls="admin-sidebar" aria-expanded="false" aria-label="Menüyü aç">
+                    <svg class="icon" aria-hidden="true"><use href="#i-menu" /></svg>
+                </button>
+                <p class="topbar-title">Puan Durumu</p>
+                <span class="topbar-crumb">Yönetim / Puan Durumu</span>
+            </div>
+            <div class="topbar-right">
+                <button type="button" class="icon-btn" aria-label="Bildirimler">
+                    <svg class="icon" aria-hidden="true"><use href="#i-bell" /></svg><span class="notif-dot"></span>
+                </button>
+                <div class="topbar-user">
+                    <span class="avatar"><svg class="icon" aria-hidden="true"><use href="#i-user" /></svg></span>
+                    <span class="topbar-user__text"><span class="topbar-user__name">Yönetici</span><span class="topbar-user__role">Tam yetkili</span></span>
+                </div>
+            </div>
+        </header>
+
+        <main class="admin-content">
+            <!-- ======== SAYFA İÇERİĞİ BAŞLANGIÇ (cshtml'e @RenderBody yerine bu bölümü taşıyın) ======== -->
+            <div class="page-head">
+                <div>
+                    <span class="page-eyebrow">Serie A 2026/27</span>
+                    <h1 class="page-title">Puan Durumu</h1>
+                    <p class="page-desc">Tamamlanan maçlardan hesaplanır. Skor girildikçe tablo kendiliğinden güncellenir.</p>
+                </div>
+            </div>
+
+            <section class="card-a" aria-label="Puan durumu">
+                <div class="table-scroll">
+                    <table class="standings-table">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="pos">#</th>
+                                <th scope="col">Takım</th>
+                                <th scope="col" class="num">O</th><th scope="col" class="num">G</th><th scope="col" class="num">B</th><th scope="col" class="num">M</th>
+                                <th scope="col" class="num">AG</th><th scope="col" class="num">YG</th><th scope="col" class="num">AV</th><th scope="col" class="num">P</th>
+                                <th scope="col">Son 5</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="zone-cl">
+                                <td class="pos">1</td>
+                                <td><div class="team-cell"><span class="team-crest" style="--crest-a:#0068A8; --crest-b:#000000; --crest-ink:#FFFFFF;">INT</span><span class="team-name">Inter</span></div></td>
+                                <td class="num">11</td><td class="num">9</td><td class="num">1</td><td class="num">1</td><td class="num">27</td><td class="num">9</td><td class="num">+18</td><td class="num pts">28</td>
+                                <td><span class="form-dots" aria-label="Son 5 maç: G G B G G"><span class="form-dot form-dot--W">G</span><span class="form-dot form-dot--W">G</span><span class="form-dot form-dot--D">B</span><span class="form-dot form-dot--W">G</span><span class="form-dot form-dot--W">G</span></span></td>
+                            </tr>
+                            <tr class="zone-cl">
+                                <td class="pos">2</td>
+                                <td><div class="team-cell"><span class="team-crest" style="--crest-a:#12A0D7; --crest-b:#FFFFFF; --crest-ink:#FFFFFF;">NAP</span><span class="team-name">Napoli</span></div></td>
+                                <td class="num">11</td><td class="num">8</td><td class="num">2</td><td class="num">1</td><td class="num">21</td><td class="num">8</td><td class="num">+13</td><td class="num pts">26</td>
+                                <td><span class="form-dots" aria-label="Son 5 maç: G M G G B"><span class="form-dot form-dot--W">G</span><span class="form-dot form-dot--L">M</span><span class="form-dot form-dot--W">G</span><span class="form-dot form-dot--W">G</span><span class="form-dot form-dot--D">B</span></span></td>
+                            </tr>
+                            <tr class="zone-cl">
+                                <td class="pos">3</td>
+                                <td><div class="team-cell"><span class="team-crest" style="--crest-a:#FB090B; --crest-b:#000000; --crest-ink:#FFFFFF;">MIL</span><span class="team-name">Milan</span></div></td>
+                                <td class="num">11</td><td class="num">7</td><td class="num">3</td><td class="num">1</td><td class="num">19</td><td class="num">10</td><td class="num">+9</td><td class="num pts">24</td>
+                                <td><span class="form-dots" aria-label="Son 5 maç: B G G B G"><span class="form-dot form-dot--D">B</span><span class="form-dot form-dot--W">G</span><span class="form-dot form-dot--W">G</span><span class="form-dot form-dot--D">B</span><span class="form-dot form-dot--W">G</span></span></td>
+                            </tr>
+                            <tr class="zone-cl">
+                                <td class="pos">4</td>
+                                <td><div class="team-cell"><span class="team-crest" style="--crest-a:#111111; --crest-b:#FFFFFF; --crest-ink:#FFFFFF;">JUV</span><span class="team-name">Juventus</span></div></td>
+                                <td class="num">11</td><td class="num">6</td><td class="num">4</td><td class="num">1</td><td class="num">17</td><td class="num">9</td><td class="num">+8</td><td class="num pts">22</td>
+                                <td><span class="form-dots" aria-label="Son 5 maç: B B G G B"><span class="form-dot form-dot--D">B</span><span class="form-dot form-dot--D">B</span><span class="form-dot form-dot--W">G</span><span class="form-dot form-dot--W">G</span><span class="form-dot form-dot--D">B</span></span></td>
+                            </tr>
+                            <tr class="zone-el">
+                                <td class="pos">5</td>
+                                <td><div class="team-cell"><span class="team-crest" style="--crest-a:#1E71B8; --crest-b:#000000; --crest-ink:#FFFFFF;">ATA</span><span class="team-name">Atalanta</span></div></td>
+                                <td class="num">11</td><td class="num">6</td><td class="num">3</td><td class="num">2</td><td class="num">20</td><td class="num">12</td><td class="num">+8</td><td class="num pts">21</td>
+                                <td><span class="form-dots" aria-label="Son 5 maç: G M G B G"><span class="form-dot form-dot--W">G</span><span class="form-dot form-dot--L">M</span><span class="form-dot form-dot--W">G</span><span class="form-dot form-dot--D">B</span><span class="form-dot form-dot--W">G</span></span></td>
+                            </tr>
+                            <tr class="zone-el">
+                                <td class="pos">6</td>
+                                <td><div class="team-cell"><span class="team-crest" style="--crest-a:#8E1F2F; --crest-b:#F0BC42; --crest-ink:#FFFFFF;">ROM</span><span class="team-name">Roma</span></div></td>
+                                <td class="num">11</td><td class="num">6</td><td class="num">2</td><td class="num">3</td><td class="num">15</td><td class="num">10</td><td class="num">+5</td><td class="num pts">20</td>
+                                <td><span class="form-dots" aria-label="Son 5 maç: M G G M G"><span class="form-dot form-dot--L">M</span><span class="form-dot form-dot--W">G</span><span class="form-dot form-dot--W">G</span><span class="form-dot form-dot--L">M</span><span class="form-dot form-dot--W">G</span></span></td>
+                            </tr>
+                            <tr>
+                                <td class="pos">7</td>
+                                <td><div class="team-cell"><span class="team-crest" style="--crest-a:#87D8F7; --crest-b:#FFFFFF; --crest-ink:#0F1B33;">LAZ</span><span class="team-name">Lazio</span></div></td>
+                                <td class="num">11</td><td class="num">5</td><td class="num">3</td><td class="num">3</td><td class="num">14</td><td class="num">12</td><td class="num">+2</td><td class="num pts">18</td>
+                                <td><span class="form-dots" aria-label="Son 5 maç: B M G B G"><span class="form-dot form-dot--D">B</span><span class="form-dot form-dot--L">M</span><span class="form-dot form-dot--W">G</span><span class="form-dot form-dot--D">B</span><span class="form-dot form-dot--W">G</span></span></td>
+                            </tr>
+                            <tr>
+                                <td class="pos">8</td>
+                                <td><div class="team-cell"><span class="team-crest" style="--crest-a:#1A2F48; --crest-b:#A21C26; --crest-ink:#FFFFFF;">BOL</span><span class="team-name">Bologna</span></div></td>
+                                <td class="num">11</td><td class="num">4</td><td class="num">5</td><td class="num">2</td><td class="num">13</td><td class="num">11</td><td class="num">+2</td><td class="num pts">17</td>
+                                <td><span class="form-dots" aria-label="Son 5 maç: G B B G M"><span class="form-dot form-dot--W">G</span><span class="form-dot form-dot--D">B</span><span class="form-dot form-dot--D">B</span><span class="form-dot form-dot--W">G</span><span class="form-dot form-dot--L">M</span></span></td>
+                            </tr>
+                            <tr class="zone-rel">
+                                <td class="pos">18</td>
+                                <td><div class="team-cell"><span class="team-crest" style="--crest-a:#9B1B30; --crest-b:#0A3C7A; --crest-ink:#FFFFFF;">CAG</span><span class="team-name">Cagliari</span></div></td>
+                                <td class="num">11</td><td class="num">1</td><td class="num">3</td><td class="num">7</td><td class="num">7</td><td class="num">19</td><td class="num">-12</td><td class="num pts">6</td>
+                                <td><span class="form-dots" aria-label="Son 5 maç: M M B M M"><span class="form-dot form-dot--L">M</span><span class="form-dot form-dot--L">M</span><span class="form-dot form-dot--D">B</span><span class="form-dot form-dot--L">M</span><span class="form-dot form-dot--L">M</span></span></td>
+                            </tr>
+                            <tr class="zone-rel">
+                                <td class="pos">19</td>
+                                <td><div class="team-cell"><span class="team-crest" style="--crest-a:#C8102E; --crest-b:#FFFFFF; --crest-ink:#FFFFFF;">TOR</span><span class="team-name">Torino</span></div></td>
+                                <td class="num">11</td><td class="num">1</td><td class="num">2</td><td class="num">8</td><td class="num">6</td><td class="num">21</td><td class="num">-15</td><td class="num pts">5</td>
+                                <td><span class="form-dots" aria-label="Son 5 maç: M M M B M"><span class="form-dot form-dot--L">M</span><span class="form-dot form-dot--L">M</span><span class="form-dot form-dot--L">M</span><span class="form-dot form-dot--D">B</span><span class="form-dot form-dot--L">M</span></span></td>
+                            </tr>
+                            <tr class="zone-rel">
+                                <td class="pos">20</td>
+                                <td><div class="team-cell"><span class="team-crest" style="--crest-a:#F4B000; --crest-b:#0A2E8A; --crest-ink:#0F1B33;">PAR</span><span class="team-name">Parma</span></div></td>
+                                <td class="num">11</td><td class="num">0</td><td class="num">3</td><td class="num">8</td><td class="num">5</td><td class="num">22</td><td class="num">-17</td><td class="num pts">3</td>
+                                <td><span class="form-dots" aria-label="Son 5 maç: M B M M M"><span class="form-dot form-dot--L">M</span><span class="form-dot form-dot--D">B</span><span class="form-dot form-dot--L">M</span><span class="form-dot form-dot--L">M</span><span class="form-dot form-dot--L">M</span></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="legend">
+                    <span><i style="background:var(--blue)"></i>Şampiyonlar Ligi (1-4)</span>
+                    <span><i style="background:var(--it-green)"></i>Avrupa Ligi (5-6)</span>
+                    <span><i style="background:var(--it-red)"></i>Düşme hattı (18-20)</span>
+                    <span>O oynanan · G galibiyet · B beraberlik · M mağlubiyet · AG atılan gol · YG yenilen gol · AV averaj · P puan</span>
+                </div>
+            </section>
+            <!-- ======== SAYFA İÇERİĞİ BİTİŞ ======== -->
+        </main>
+    </div>
+    <script src="assets/admin.js"></script>
+</body>
+</html>

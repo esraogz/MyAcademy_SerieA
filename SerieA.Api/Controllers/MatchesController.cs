@@ -47,6 +47,12 @@ namespace SerieA.WebApi.Controllers
             return Ok(await _matchService.GetMatchByIdAsync(id));
         }
 
+        [HttpGet("GetMatches/{week}")]
+        public async Task<IActionResult> GetMatchByWeek(int week)
+        {
+            return Ok(await _matchService.GetMatchesByWeekAsync(week));
+        } 
+
 
     }
 }

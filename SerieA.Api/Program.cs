@@ -7,6 +7,7 @@ using SerieA.WebApi.Mapping;
 using SerieA.WebApi.Services.Events;
 using SerieA.WebApi.Services.MatchDetails;
 using SerieA.WebApi.Services.Matches;
+using SerieA.WebApi.Services.Standings;
 using SerieA.WebApi.Services.Teams;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using System.Reflection;
@@ -19,6 +20,7 @@ builder.Services.AddScoped<ITeamService, TeamService>();
 builder.Services.AddScoped<IMatchService, MatchService>();
 builder.Services.AddScoped<IMatchDetailService, MatchDetailService>();
 builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IStandingService, StandingService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {

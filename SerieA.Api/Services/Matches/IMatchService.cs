@@ -9,5 +9,6 @@ namespace SerieA.WebApi.Services.Matches
         Task UpdateMatchAsync(UpdateMatchDto updateMatchDto);
         Task DeleteMatchAsync(int id);
         Task<ResultMatchDto> GetMatchByIdAsync(int id);
+        Task<List<ResultMatchDto>> GetMatchesByWeekAsync(int week);
     }
 }

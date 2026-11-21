@@ -3,6 +3,7 @@ using SerieA.WebUI.Services;
 using SerieA.WebUI.Services.Events;
 using SerieA.WebUI.Services.MatchDetails;
 using SerieA.WebUI.Services.Matches;
+using SerieA.WebUI.Services.Standings;
 using SerieA.WebUI.Services.TeamServices;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +29,11 @@ builder.Services.AddHttpClient<IMatchDetailService, MatchDetailService>((sp, cli
 });
 
 builder.Services.AddHttpClient<IEventService, EventService>((sp, client) =>
+{
+    client.BaseAddress = new Uri(apiOptions.BaseUrl);
+});
+
+builder.Services.AddHttpClient<IStandingService, StandingService>((sp, client) =>
 {
     client.BaseAddress = new Uri(apiOptions.BaseUrl);
 });

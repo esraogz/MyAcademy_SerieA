@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Haftalık Fikstür | Serie A Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/admin.css">
+    <link rel="stylesheet" href="assets/pages.css">
+</head>
+<body class="admin">
+    
+    <div class="admin-main">
+        <main class="admin-content">
+            <div class="page-head">
+                <div>
+                    <span class="page-eyebrow">Serie A 2026/27</span>
+                    <h1 class="page-title">Haftalık Fikstür</h1>
+                    <p class="page-desc">Bir haftanın tüm karşılaşmalarını görün, maç detayına geçin veya haftaya yeni maç ekleyin.</p>
+                </div>
+                <a href="../Admin Paneli 2.html" class="btn-a btn-a--primary">
+                    <svg class="icon" aria-hidden="true"><use href="#i-plus" /></svg>Yeni Maç Ekle
+                </a>
+            </div>
+
+            <section class="card-a" aria-label="Haftalık fikstür">
+                <div class="week-pager">
+                    <a class="btn-a btn-a--ghost" href="#">‹ Önceki</a>
+                    <div class="week-pager__label">12. Hafta<small>6 maç</small></div>
+                    <a class="btn-a btn-a--ghost" href="#">Sonraki ›</a>
+                </div>
+
+                <nav class="week-chips" aria-label="Hafta seç">
+                    <a class="week-chip" href="#">1</a><a class="week-chip" href="#">2</a><a class="week-chip" href="#">3</a><a class="week-chip" href="#">4</a>
+                    <a class="week-chip" href="#">5</a><a class="week-chip" href="#">6</a><a class="week-chip" href="#">7</a><a class="week-chip" href="#">8</a>
+                    <a class="week-chip" href="#">9</a><a class="week-chip" href="#">10</a><a class="week-chip" href="#">11</a>
+                    <a class="week-chip is-current" href="#" aria-current="page">12</a>
+                    <a class="week-chip" href="#">13</a><a class="week-chip" href="#">14</a><a class="week-chip" href="#">15</a><a class="week-chip" href="#">16</a>
+                    <a class="week-chip" href="#">17</a><a class="week-chip" href="#">18</a><a class="week-chip" href="#">19</a><a class="week-chip" href="#">20</a>
+                    <a class="week-chip" href="#">…</a><a class="week-chip" href="#">38</a>
+                </nav>
+
+                <div class="match-cards">
+                    <article class="match-card">
+                        <div class="match-card__meta"><span>22.11.2026 · 20:45</span><span class="badge-a badge-a--NotStarted">Başlamadı</span></div>
+                        <div class="match-card__teams">
+                            <span class="team"><span class="team-crest" style="--crest-a:#0068A8; --crest-b:#000000"></span>Inter</span>
+                            <span class="score score--empty">-</span>
+                            <span class="team"><span class="team-crest" style="--crest-a:#12A0D7; --crest-b:#FFFFFF"></span>Napoli</span>
+                        </div>
+                        <div class="match-card__foot"><span><svg class="icon" aria-hidden="true"><use href="#i-stadium" /></svg>San Siro</span>
+                            <a class="act-btn" href="#" title="Maç detayı"><svg class="icon"><use href="#i-eye" /></svg></a></div>
+                    </article>
+
+                    <article class="match-card">
+                        <div class="match-card__meta"><span>22.11.2026 · 18:00</span><span class="badge-a badge-a--Live">Canlı</span></div>
+                        <div class="match-card__teams">
+                            <span class="team"><span class="team-crest" style="--crest-a:#111111; --crest-b:#FFFFFF"></span>Juventus</span>
+                            <span class="score">1 - 1</span>
+                            <span class="team"><span class="team-crest" style="--crest-a:#87D8F7; --crest-b:#FFFFFF"></span>Lazio</span>
+                        </div>
+                        <div class="match-card__foot"><span><svg class="icon" aria-hidden="true"><use href="#i-stadium" /></svg>Allianz Stadium</span>
+                            <a class="act-btn" href="#" title="Maç detayı"><svg class="icon"><use href="#i-eye" /></svg></a></div>
+                    </article>
+
+                    <article class="match-card">
+                        <div class="match-card__meta"><span>21.11.2026 · 20:45</span><span class="badge-a badge-a--Finished">Tamamlandı</span></div>
+                        <div class="match-card__teams">
+                            <span class="team"><span class="team-crest" style="--crest-a:#1A2F48; --crest-b:#A21C26"></span>Bologna</span>
+                            <span class="score">2 - 0</span>
+                            <span class="team"><span class="team-crest" style="--crest-a:#9B1B30; --crest-b:#0A3C7A"></span>Cagliari</span>
+                        </div>
+                        <div class="match-card__foot"><span><svg class="icon" aria-hidden="true"><use href="#i-stadium" /></svg>Renato Dall'Ara</span>
+                            <a class="act-btn" href="#" title="Maç detayı"><svg class="icon"><use href="#i-eye" /></svg></a></div>
+                    </article>
+
+                    <article class="match-card">
+                        <div class="match-card__meta"><span>23.11.2026 · 18:00</span><span class="badge-a badge-a--NotStarted">Başlamadı</span></div>
+                        <div class="match-card__teams">
+                            <span class="team"><span class="team-crest" style="--crest-a:#FB090B; --crest-b:#000000"></span>Milan</span>
+                            <span class="score score--empty">-</span>
+                            <span class="team"><span class="team-crest" style="--crest-a:#8E1F2F; --crest-b:#F0BC42"></span>Roma</span>
+                        </div>
+                        <div class="match-card__foot"><span><svg class="icon" aria-hidden="true"><use href="#i-stadium" /></svg>San Siro</span>
+                            <a class="act-btn" href="#" title="Maç detayı"><svg class="icon"><use href="#i-eye" /></svg></a></div>
+                    </article>
+
+                    <article class="match-card">
+                        <div class="match-card__meta"><span>23.11.2026 · 20:45</span><span class="badge-a badge-a--NotStarted">Başlamadı</span></div>
+                        <div class="match-card__teams">
+                            <span class="team"><span class="team-crest" style="--crest-a:#1E71B8; --crest-b:#000000"></span>Atalanta</span>
+                            <span class="score score--empty">-</span>
+                            <span class="team"><span class="team-crest" style="--crest-a:#5B2C83; --crest-b:#FFFFFF"></span>Fiorentina</span>
+                        </div>
+                        <div class="match-card__foot"><span><svg class="icon" aria-hidden="true"><use href="#i-stadium" /></svg>Gewiss Stadium</span>
+                            <a class="act-btn" href="#" title="Maç detayı"><svg class="icon"><use href="#i-eye" /></svg></a></div>
+                    </article>
+
+                    <article class="match-card">
+                        <div class="match-card__meta"><span>24.11.2026 · 20:45</span><span class="badge-a badge-a--Postponed">Ertelendi</span></div>
+                        <div class="match-card__teams">
+                            <span class="team"><span class="team-crest" style="--crest-a:#F4B000; --crest-b:#0A2E8A"></span>Parma</span>
+                            <span class="score score--empty">-</span>
+                            <span class="team"><span class="team-crest" style="--crest-a:#C8102E; --crest-b:#FFFFFF"></span>Torino</span>
+                        </div>
+                        <div class="match-card__foot"><span><svg class="icon" aria-hidden="true"><use href="#i-stadium" /></svg>Ennio Tardini</span>
+                            <a class="act-btn" href="#" title="Maç detayı"><svg class="icon"><use href="#i-eye" /></svg></a></div>
+                    </article>
+                </div>
+            </section>
+            <!-- ======== SAYFA İÇERİĞİ BİTİŞ ======== -->
+        </main>
+    </div>
+    <script src="assets/admin.js"></script>
+</body>
+</html>

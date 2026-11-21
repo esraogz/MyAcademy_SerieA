@@ -4,12 +4,12 @@
 
 <style>
     /* =============================================================
-                       Serie A Admin - admin.css (Takımlar)
-                       1 Tokens   2 Base + layout   3 Sidebar   4 Topbar
-                       5 İtalya dokunuşları   6 Sayfa başlığı + butonlar   7 Lig şeridi
-                       8 Filtre   9 Tablo   10 Rozetler + işlemler   11 Modal + form
-                       12 Toast   13 Responsive
-                       ============================================================= */
+                               Serie A Admin - admin.css (Takımlar)
+                               1 Tokens   2 Base + layout   3 Sidebar   4 Topbar
+                               5 İtalya dokunuşları   6 Sayfa başlığı + butonlar   7 Lig şeridi
+                               8 Filtre   9 Tablo   10 Rozetler + işlemler   11 Modal + form
+                               12 Toast   13 Responsive
+                               ============================================================= */
 
     /* 1. Tokens */
     :root {
@@ -1182,12 +1182,12 @@
 
 <style>
     /* =============================================================
-               Serie A Admin - admin.css
-               1 Tokens   2 Base + layout   3 Sidebar   4 Topbar
-               5 Sayfa başlığı + butonlar   6 Filtre   7 Tablo
-               8 Rozetler + işlem butonları   9 Modal + form   10 Toast
-               11 Responsive
-               ============================================================= */
+                       Serie A Admin - admin.css
+                       1 Tokens   2 Base + layout   3 Sidebar   4 Topbar
+                       5 Sayfa başlığı + butonlar   6 Filtre   7 Tablo
+                       8 Rozetler + işlem butonları   9 Modal + form   10 Toast
+                       11 Responsive
+                       ============================================================= */
 
     /* 1. Tokens */
     :root {
@@ -2139,5 +2139,216 @@
     .toast-a--info .icon {
         color: #8FB4FF;
     }
-    
 </style>
+
+<style>
+    /* ---- Haftalar ---- */
+    .week-pager {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .week-pager__label {
+        min-width: 150px;
+        text-align: center;
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: .02em;
+    }
+
+        .week-pager__label small {
+            display: block;
+            color: var(--muted);
+            font-family: var(--font-body);
+            font-size: .78rem;
+            font-weight: 500;
+            letter-spacing: 0;
+        }
+
+    .btn-a[aria-disabled="true"] {
+        opacity: .45;
+        pointer-events: none;
+    }
+
+    .week-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 12px 18px;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .week-chip {
+        min-width: 38px;
+        padding: 5px 8px;
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius-sm);
+        background: var(--white);
+        color: var(--text-2);
+        font-size: .82rem;
+        font-weight: 600;
+        text-align: center;
+        text-decoration: none;
+    }
+
+        .week-chip:hover {
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        .week-chip.is-current {
+            border-color: var(--blue);
+            background: var(--blue);
+            color: #fff;
+        }
+
+    .match-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 16px;
+        padding: 18px;
+    }
+
+    .match-card {
+        display: grid;
+        gap: 12px;
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--white);
+    }
+
+    .match-card__meta, .match-card__foot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--muted);
+        font-size: .8rem;
+    }
+
+        .match-card__foot span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+    .match-card__teams {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 10px;
+        align-items: center;
+    }
+
+        .match-card__teams .team:last-child {
+            justify-content: flex-end;
+        }
+</style>
+
+<style>
+    /* ---- Puan durumu ---- */
+    .standings-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .standings-table th, .standings-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--line);
+            white-space: nowrap;
+        }
+
+        .standings-table th {
+            background: var(--row-hover);
+            color: var(--muted);
+            font-size: .76rem;
+            font-weight: 600;
+            text-align: left;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+        .standings-table tbody tr:hover td {
+            background: var(--row-hover);
+        }
+
+        .standings-table .num {
+            text-align: right;
+        }
+
+        .standings-table .pts {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
+        .standings-table .pos {
+            width: 52px;
+            border-left: 4px solid transparent;
+            font-weight: 700;
+        }
+
+    .zone-cl .pos {
+        border-left-color: var(--blue);
+    }
+
+    .zone-el .pos {
+        border-left-color: var(--it-green);
+    }
+
+    .zone-rel .pos {
+        border-left-color: var(--it-red);
+    }
+
+    .form-dots {
+        display: inline-flex;
+        gap: 4px;
+    }
+
+    .form-dot {
+        display: grid;
+        place-items: center;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        color: #fff;
+        font-size: .68rem;
+        font-weight: 700;
+    }
+
+    .form-dot--W {
+        background: var(--it-green);
+    }
+
+    .form-dot--D {
+        background: var(--dim);
+    }
+
+    .form-dot--L {
+        background: var(--it-red);
+    }
+
+    .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        padding: 12px 18px;
+        color: var(--muted);
+        font-size: .8rem;
+    }
+
+        .legend i {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin-right: 6px;
+            border-radius: 2px;
+        }
+
+</style>
+
+
