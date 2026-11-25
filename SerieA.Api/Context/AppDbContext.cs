@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SerieA.Api.Entities;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SerieA.WebApi.Entities;
 
 namespace SerieA.WebApi.Context
 {
-    public class AppDbContext: DbContext
+    public class AppDbContext: IdentityDbContext<AppUser, AppRole, int>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

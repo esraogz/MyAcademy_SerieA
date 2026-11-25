@@ -1,0 +1,74 @@
+﻿@model ResultDashboardDto
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="page-head">
+    <div>
+        <span class="page-eyebrow">Serie A 2026/27</span>
+        <h1 class="page-title">Genel Bakış</h1>
+        <p class="page-desc">Sezonun durumunu, sıradaki karşılaşmaları ve son sonuçları tek bakışta görün.</p>
+    </div>
+    <a href="../Admin Paneli 2.html" class="btn-a btn-a--primary">
+        <svg class="icon" aria-hidden="true"><use href="#i-plus" /></svg>Yeni Maç Ekle
+    </a>
+</div>
+
+<section class="league-strip" aria-label="Sezon özeti">
+    <div class="strip-item strip-item--green">
+        <span class="strip-icon"><svg class="icon"><use href="#i-shield" /></svg></span>
+        <div><span class="strip-label">Aktif takım</span><span class="strip-value">@Model.ActiveTeamCount <small>/@Model.TotalWeek</small></span></div>
+    </div>
+    <div class="strip-item strip-item--blue">
+        <span class="strip-icon"><svg class="icon"><use href="#i-ball" /></svg></span>
+        <div><span class="strip-label">Oynanan maç</span><span class="strip-value">@Model.PlayedMatchCount <small>/@Model.TotalPlayedMatch</small></span></div>
+    </div>
+    <div class="strip-item strip-item--navy">
+        <span class="strip-icon"><svg class="icon"><use href="#i-calendar" /></svg></span>
+        <div><span class="strip-label">Güncel hafta</span><span class="strip-value">@Model.CurrentWeek <small>/38</small></span></div>
+    </div>
+    <div class="strip-item strip-item--red">
+        <span class="strip-icon"><svg class="icon"><use href="#i-clock" /></svg></span>
+        <div><span class="strip-label">Canlı maç</span><span class="strip-value">@Model.LiveMatchCount</span></div>
+    </div>
+</section>
+
+<div class="dash-grid">
+    <div class="dash-col">
+        <section class="card-a" aria-label="Sıradaki maçlar">
+            @foreach(var item in Model.NextMatches){
+            <div class="fixture-row">
+                <div class="fixture-when"><strong>@item.MatchDate</strong>@item.Week</div>
+                <span class="team"><span class="team-crest" style="--crest-a:@item.HomeTeamColorA; --crest-b:@item.HomeTeamColorB"></span>@item.HomeTeamName</span>
+                <span class="score score--empty">-</span>
+                <span class="team"><span class="team-crest" style="--crest-a:@item.AwayTeamColorA; --crest-b:@item.AwayTeamColorB"></span>@item.AwayTeamName</span>
+            </div>
+            }
+            
+        </section>
+
+        <section class="card-a" aria-label="Son sonuçlar">
+            <div class="card-head"><h2>Son sonuçlar</h2><a href="standings.html">Puan durumu</a></div>
+            @foreach(var item in Model.LastResults){
+            <div class="fixture-row">
+                <div class="fixture-when"><span class="badge-a badge-a--Live">@item.Status</span></div>
+                    <span class="team"><span class="team-crest" style="--crest-a:@item.HomeTeamColorA; --crest-b:@item.HomeTeamColorB"></span>@item.HomeTeamName</span>
+                <span class="score">@item.HomeScore - @item.AwayScore</span>
+                    <span class="team"><span class="team-crest" style="--crest-a:@item.AwayTeamColorA; --crest-b:@item.AwayTeamColorB"></span>@item.AwayTeamName</span>
+            </div>
+            }
+        </section>
+    </div>
+
+    <section class="card-a" aria-label="Hızlı işlemler">
+        <div class="card-head"><h2>Hızlı işlemler</h2></div>
+        <div class="quick-list">
+            <a class="btn-a btn-a--secondary" href="/Admin/Match/ListMatch"><svg class="icon"><use href="#i-ball" /></svg>Maçları yönet</a>
+            <a class="btn-a btn-a--secondary" href="/Admin/Team/ListTeam"><svg class="icon"><use href="#i-shield" /></svg>Takımları yönet</a>
+            <a class="btn-a btn-a--secondary" href="/Admin/Match/GetMatchesByWeek"><svg class="icon"><use href="#i-calendar" /></svg>Haftalık fikstürü aç</a>
+            <a class="btn-a btn-a--secondary" href="/Admin/Standing/GetStanding"><svg class="icon"><use href="#i-table" /></svg>Puan durumunu aç</a>
+        </div>
+    </section>
+</div>
+

@@ -1,4 +1,4 @@
-﻿using SerieA.Api.Entities;
+﻿using SerieA.WebApi.Entities;
 
 namespace SerieA.WebApi.Entities
 {

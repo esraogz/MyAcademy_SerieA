@@ -1,4 +1,4 @@
-﻿namespace SerieA.Api.Entities
+﻿namespace SerieA.WebApi.Entities
 {
     public class Team
     {

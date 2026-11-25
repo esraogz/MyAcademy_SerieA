@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using SerieA.Api.Entities;
+using SerieA.WebApi.Entities;
 using SerieA.WebApi.DTOs.MatchCardDtos;
 using SerieA.WebApi.DTOs.MatchDetailDtos;
 using SerieA.WebApi.DTOs.MatchDtos;
@@ -8,7 +8,7 @@ using SerieA.WebApi.DTOs.MatchGoalDtos;
 using SerieA.WebApi.DTOs.MatchStatisticDtos;
 using SerieA.WebApi.DTOs.MatchSubstitutionDtos;
 using SerieA.WebApi.DTOs.TeamDtos;
-using SerieA.WebApi.Entities;
+using SerieA.WebApi.DTOs.UserDtos;
 
 namespace SerieA.WebApi.Mapping
 {
@@ -34,6 +34,10 @@ namespace SerieA.WebApi.Mapping
             CreateMap<CreateMatchEventDto, MatchGoal>();
             CreateMap<CreateMatchEventDto, MatchCard>();
             CreateMap<CreateMatchEventDto, MatchSubstitution>();
+
+            CreateMap<AppUser, ResultUserDto>().ReverseMap();
+            CreateMap<CreateUserDto, AppUser>();
+            CreateMap<UpdateUserDto, AppUser>();
         }
     }
 }

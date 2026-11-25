@@ -1,0 +1,256 @@
+﻿@model List<ResultUserDto>
+@{
+    ViewData["Title"] = "ListUser";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    int count = 0;
+}
+
+<main class="admin-content">
+    
+    <div class="page-head">
+        <div>
+            <span class="page-eyebrow">Serie A 2026/27</span>
+            <h1 class="page-title">Kullanıcı Yönetimi</h1>
+            <p class="page-desc">Panele erişebilen kullanıcıları ekleyebilir, rollerini değiştirebilir ve pasife alabilirsiniz.</p>
+        </div>
+        <button type="button" class="btn-a btn-a--primary" onclick="openCreateModal()">
+            <svg class="icon" aria-hidden="true"><use href="#i-plus" /></svg>Yeni Kullanıcı Ekle
+        </button>
+    </div>
+
+    <section class="card-a" aria-label="Kullanıcı listesi">
+        <form method="get" class="filter-bar">
+            <div class="filter-search">
+                <label class="field-label" for="f-q">Kullanıcı Ara</label>
+                <div class="input-icon">
+                    <svg class="icon" aria-hidden="true"><use href="#i-search" /></svg>
+                    <input class="input-a" id="f-q" name="search" type="search" placeholder="Ad veya e-posta">
+                </div>
+            </div>
+            <div>
+                <label class="field-label" for="f-role">Rol</label>
+                <select class="select-a" id="f-role" name="role">
+                    <option value="">Tüm Roller</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Editör">Editör</option>
+                </select>
+            </div>
+            <div>
+                <label class="field-label" for="f-status">Durum</label>
+                <select class="select-a" id="f-status" name="status">
+                    <option value="">Tümü</option>
+                    <option value="active">Aktif</option>
+                    <option value="inactive">Pasif</option>
+                </select>
+            </div>
+            <div class="filter-actions">
+                <a href="users.html" class="btn-a btn-a--ghost">Temizle</a>
+                <button type="submit" class="btn-a btn-a--secondary">Filtrele</button>
+            </div>
+        </form>
+
+        <div class="table-scroll">
+            @if (TempData["DeleteError"] != null)
+            {
+                <div class="form-alert is-visible">⚠️ @TempData["DeleteError"]</div>
+            }
+            <table class="team-table">
+                <thead>
+                    <tr>
+                        <th scope="col" class="col-id">ID</th>
+                        <th scope="col">Kullanıcı</th>
+                        <th scope="col">E-posta</th>
+                        <th scope="col">Rol</th>
+                        <th scope="col">Durum</th>
+                        <th scope="col" class="col-actions">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var item in Model){
+                        count++;
+                        <tr>
+                        <td class="col-id">@count</td>
+                        <td><div class="team-cell"><span class="user-avatar" aria-hidden="true">@item.FirstName.FirstOrDefault()</span><span class="team-name">@item.FirstName @item.LastName</span></div></td>
+                        <td>@item.Email</td>
+                            <td><span class="role-pill role-pill--admin">@string.Join(", ", item.Roles)</span></td>
+                        <td><span class="badge-a badge-a--active">@(item.IsActive ? "Aktif" : "Pasif" )</span></td>
+                        <td class="col-actions">
+                            <div class="row-actions">
+                                <button type="button" class="act-btn" title="Düzenle"
+                                        data-id="@item.Id"
+                                        data-firstname="@item.FirstName"
+                                        data-lastname="@item.LastName"
+                                        data-email="@item.Email"
+                                        data-role="@item.Roles.FirstOrDefault()"
+                                        data-isactive="@item.IsActive.ToString().ToLower()"
+                                        onclick="openUpdateModal(this)"><svg class="icon"><use href="#i-edit" /></svg></button>
+                                <button type="button" class="act-btn act-btn--danger" title="Sil"
+                                        data-id="@item.Id"
+                                        data-name="@item.FirstName @item.LastName"
+                                        onclick="openDeleteModal(this)"><svg class="icon"><use href="#i-trash" /></svg></button>
+                            </div>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- MODAL 1: YENİ KULLANICI -->
+    <dialog class="modal-a" id="create-user-modal">
+        <form asp-area="Admin" asp-controller="User" asp-action="CreateUser" method="post">
+            <div class="modal-head">
+                <h2 class="modal-title">Yeni Kullanıcı Ekle</h2>
+                <button type="button" class="icon-btn" aria-label="Kapat" onclick="document.getElementById('create-user-modal').close()"><svg class="icon"><use href="#i-x" /></svg></button>
+            </div>
+            <div class="modal-body">
+                @Html.ValidationSummary(true, "", new { @class = "form-alert is-visible" })
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label class="field-label">Ad <span class="req">*</span></label>
+                        <input class="input-a" name="FirstName" type="text" placeholder="Örn. Ayşe">
+                        <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("FirstName")</span>
+                    </div>
+                    <div class="form-field">
+                        <label class="field-label">Soyad <span class="req">*</span></label>
+                        <input class="input-a" name="LastName" type="text" placeholder="Örn. Yılmaz">
+                        <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("LastName")</span>
+                    </div>
+                    <div class="form-field span-2">
+                        <label class="field-label">E-posta <span class="req">*</span></label>
+                        <input class="input-a" name="Email" type="email" placeholder="ornek@siteadi.com">
+                        <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("Email")</span>
+                    </div>
+                    <div class="form-field span-2">
+                        <label class="field-label">Şifre <span class="req">*</span></label>
+                        <input class="input-a" name="Password" type="password" autocomplete="new-password" placeholder="En az 6 karakter">
+                        <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("Password")</span>
+                    </div>
+                    <div class="form-field">
+                        <label class="field-label">Rol <span class="req">*</span></label>
+                        <select class="select-a" name="Roles">
+                            <option value="">Rol seçin</option>
+                            @if (ViewBag.Roles != null)
+                            {
+                                foreach (var role in (List<ResultRoleDto>)ViewBag.Roles)
+                                {
+                                    <option value="@role.Name">@role.Name</option>
+                                }
+                            }
+                        </select>
+                        <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("Roles")</span>
+                    </div>
+                    <div class="form-field">
+                        <label class="field-label">Durum</label>
+                        <select class="select-a" name="IsActive"><option value="true">Aktif</option><option value="false">Pasif</option></select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button type="button" class="btn-a btn-a--secondary" onclick="document.getElementById('create-user-modal').close()">Vazgeç</button>
+                <button type="submit" class="btn-a btn-a--primary">Kaydet</button>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- MODAL 2: KULLANICI DÜZENLE -->
+    <dialog class="modal-a" id="update-user-modal">
+        <form asp-area="Admin" asp-controller="User" asp-action="UpdateUser" method="post">
+            <div class="modal-head">
+                <h2 class="modal-title">Kullanıcıyı Düzenle</h2>
+                <button type="button" class="icon-btn" aria-label="Kapat" onclick="document.getElementById('update-user-modal').close()"><svg class="icon"><use href="#i-x" /></svg></button>
+            </div>
+            <div class="modal-body">
+                @Html.ValidationSummary(true, "", new { @class = "form-alert is-visible" })
+                <input type="hidden" name="Id" id="u-id">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label class="field-label">Ad <span class="req">*</span></label>
+                        <input class="input-a" name="FirstName" id="u-firstname" type="text">
+                        <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("FirstName")</span>
+                    </div>
+                    <div class="form-field">
+                        <label class="field-label">Soyad <span class="req">*</span></label>
+                        <input class="input-a" name="LastName" id="u-lastname" type="text">
+                        <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("LastName")</span>
+                    </div>
+                    <div class="form-field span-2">
+                        <label class="field-label">E-posta <span class="req">*</span></label>
+                        <input class="input-a" name="Email" id="u-email" type="email">
+                        <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("Email")</span>
+                    </div>
+                    <div class="form-field">
+                        <label class="field-label">Rol <span class="req">*</span></label>
+                        <select class="select-a" name="Roles" id="u-roles" required>
+                            @if (ViewBag.Roles != null)
+                            {
+                                foreach (var role in (List<ResultRoleDto>)ViewBag.Roles)
+                                {
+                                    <option value="@role.Name">@role.Name</option>
+                                }
+                            }
+                        </select>
+                        <span class="text-danger" style="font-size:0.8rem;">@Html.ValidationMessage("Roles")</span>
+                    </div>
+                    <div class="form-field">
+                        <label class="field-label">Durum</label>
+                        <select class="select-a" name="IsActive" id="u-isactive"><option value="true">Aktif</option><option value="false">Pasif</option></select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button type="button" class="btn-a btn-a--secondary" onclick="document.getElementById('update-user-modal').close()">Vazgeç</button>
+                <button type="submit" class="btn-a btn-a--primary">Güncelle</button>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- MODAL 3: SİLME ONAYI -->
+    <dialog class="modal-a modal-a--sm" id="delete-user-modal">
+        <form asp-area="Admin" asp-controller="User" asp-action="DeleteUser" method="post">
+            <div class="modal-head">
+                <h2 class="modal-title">Kullanıcıyı Sil</h2>
+                <button type="button" class="icon-btn" aria-label="Kapat" onclick="document.getElementById('delete-user-modal').close()"><svg class="icon"><use href="#i-x" /></svg></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="id" id="d-id">
+                <p class="confirm-text"><strong id="d-name"></strong> kullanıcısı silinecek. Bu işlem geri alınamaz.</p>
+            </div>
+            <div class="modal-foot">
+                <button type="button" class="btn-a btn-a--secondary" onclick="document.getElementById('delete-user-modal').close()">Vazgeç</button>
+                <button type="submit" class="btn-a btn-a--danger">Sil</button>
+            </div>
+        </form>
+    </dialog>
+</main>
+
+<script>
+    function openCreateModal() {
+        openCleanModal(document.getElementById('create-user-modal'), true);
+    }
+    function openUpdateModal(btn) {
+        clearModalErrors(document.getElementById('update-user-modal'));
+        document.getElementById('u-id').value = btn.dataset.id;
+        document.getElementById('u-firstname').value = btn.dataset.firstname;
+        document.getElementById('u-lastname').value = btn.dataset.lastname;
+        document.getElementById('u-email').value = btn.dataset.email;
+        document.getElementById('u-roles').value = btn.dataset.role;
+        document.getElementById('u-isactive').value = btn.dataset.isactive;
+        document.getElementById('update-user-modal').showModal();
+    }
+    function openDeleteModal(btn) {
+        document.getElementById('d-id').value = btn.dataset.id;
+        document.getElementById('d-name').textContent = btn.dataset.name;
+        document.getElementById('delete-user-modal').showModal();
+    }
+     @if (ViewBag.OpenCreateModal == true)
+    {
+                <text>document.getElementById('create-user-modal').showModal();</text>
+    }
+    @if (ViewBag.OpenUpdateModal == true)
+    {
+                <text>document.getElementById('update-user-modal').showModal();</text>
+    }
+</script>
+

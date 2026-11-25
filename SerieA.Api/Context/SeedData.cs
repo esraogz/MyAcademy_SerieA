@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SerieA.Api.Entities;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SerieA.WebApi.Entities;
 
 namespace SerieA.WebApi.Context
@@ -10,6 +10,20 @@ namespace SerieA.WebApi.Context
         {
             using var context = new AppDbContext(
                 serviceProvider.GetRequiredService<DbContextOptions<AppDbContext>>());
+
+            // =========================================================================
+            // 0. ADIM: ROLLER (Identity)
+            // Roller AspNetRoles tablosunda yoksa kullanıcıya atanamaz; bu yüzden açılışta oluşturulur.
+            // SeedData senkron olduğu için async Identity metotları GetAwaiter().GetResult() ile beklenir.
+            // =========================================================================
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<AppRole>>();
+            foreach (var roleName in new[] { "Admin", "Editor" })
+            {
+                if (!roleManager.RoleExistsAsync(roleName).GetAwaiter().GetResult())
+                {
+                    roleManager.CreateAsync(new AppRole { Name = roleName }).GetAwaiter().GetResult();
+                }
+            }
 
             // =========================================================================
             // 1. ADIM: TAKIMLAR (20 Aktif Serie A Kulübü + 2 Pasif Kulüp)

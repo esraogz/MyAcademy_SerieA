@@ -1,6 +1,6 @@
 ﻿using SerieA.WebApi.Entities;
 
-namespace SerieA.Api.Entities
+namespace SerieA.WebApi.Entities
 {
     public class Match
     {

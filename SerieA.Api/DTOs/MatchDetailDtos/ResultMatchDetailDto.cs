@@ -1,4 +1,4 @@
-﻿using SerieA.Api.Entities;
+﻿using SerieA.WebApi.Entities;
 using SerieA.WebApi.DTOs.MatchCardDtos;
 using SerieA.WebApi.DTOs.MatchEventItemDtos;
 using SerieA.WebApi.DTOs.MatchGoalDtos;

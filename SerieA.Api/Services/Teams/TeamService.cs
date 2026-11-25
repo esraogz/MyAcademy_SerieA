@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using SerieA.Api.Entities;
+using SerieA.WebApi.Entities;
 using SerieA.WebApi.Context;
 using SerieA.WebApi.DTOs.TeamDtos;
 using SerieA.WebApi.Exceptions;

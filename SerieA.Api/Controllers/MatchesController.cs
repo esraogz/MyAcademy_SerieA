@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SerieA.Api.Entities;
+using SerieA.WebApi.Entities;
 using SerieA.WebApi.Context;
 using SerieA.WebApi.DTOs.MatchDtos;
 using SerieA.WebApi.DTOs.TeamDtos;
