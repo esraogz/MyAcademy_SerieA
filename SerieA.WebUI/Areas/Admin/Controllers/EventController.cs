@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SerieA.WebUI.DTOs.MatchEventItemDtos;
 using SerieA.WebUI.Services.Events;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 namespace SerieA.WebUI.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,Editor")]
     public class EventController(IEventService _eventService) : Controller
     {
         public async Task<IActionResult> CreateEvent(CreateMatchEventDto createMatchEventDto)

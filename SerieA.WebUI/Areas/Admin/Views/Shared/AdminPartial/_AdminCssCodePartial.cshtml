@@ -2351,8 +2351,6 @@
 
 </style>
 
-
-
 <style>
     /* ---- Dashboard (Genel Bakış) ---- */
     .card-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--line); }
@@ -2407,5 +2405,547 @@
 
     .team-table tbody tr.is-inactive .user-avatar {
         opacity: .5;
+    }
+
+    @@keyframes modal-in {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: none; }
+    }
+
+    @@keyframes row-flash {
+        from { background: var(--blue-soft); }
+        to { background: transparent; }
+    }
+
+    @@media (max-width: 1100px) {
+        .filter-bar { grid-template-columns: 1fr 1fr; }
+        .filter-bar .filter-search { grid-column: 1 / -1; }
+        .filter-actions { grid-column: 1 / -1; justify-content: flex-end; }
+        .league-strip { grid-template-columns: 1fr 1fr; }
+        .strip-item:nth-child(3) { border-left: 0; }
+        .strip-item:nth-child(n+3) { border-top: 1px solid var(--line); }
+    }
+
+    @@media (max-width: 991.98px) {
+        .admin-main { margin-left: 0; }
+        .admin-sidebar { width: 260px; transform: translateX(-100%); transition: transform .2s ease; }
+        body.sidebar-open .admin-sidebar { transform: none; }
+        body.sidebar-open .sidebar-backdrop { display: block; position: fixed; inset: 0; z-index: 35; background: rgba(8, 21, 48, .45); }
+        .menu-toggle { display: grid; }
+        .admin-topbar { padding: 0 16px; }
+        .admin-content { padding: 20px 16px 40px; }
+        .topbar-crumb { display: none; }
+    }
+
+    @@media (max-width: 575.98px) {
+        .filter-bar, .form-grid, .color-row { grid-template-columns: 1fr; }
+        .page-head .btn-a--primary { width: 100%; }
+        .topbar-user__text { display: none; }
+        .toast-stack { left: 16px; right: 16px; }
+        .strip-item { padding: 10px 12px; }
+    }
+
+    @@media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+</style>
+
+<style>
+    /* Login (yalnızca .login-shell içine etki eder, Admin panel butonlarını bozmaz) */
+    body.login {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-body);
+        font-size: 15px;
+        line-height: 1.45;
+    }
+
+    .login-shell {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(380px, 1fr);
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-body);
+        font-size: 15px;
+        line-height: 1.45;
+    }
+
+    .login-shell *, .login-shell *::before, .login-shell *::after {
+        box-sizing: border-box;
+    }
+
+    .login-stage {
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 40px clamp(32px, 5vw, 72px) 44px;
+        background: var(--navy-800);
+        color: #C9D4EA;
+    }
+
+        .login-stage::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--tricolore);
+        }
+
+    .login-shell .pitch {
+        position: absolute;
+        right: -12%;
+        bottom: -8%;
+        width: min(760px, 120%);
+        color: #fff;
+        opacity: .07;
+        pointer-events: none;
+    }
+
+    .login-brand {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .login-shell .brand-mark {
+        position: relative;
+        overflow: hidden;
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: var(--blue);
+        font-family: var(--font-display);
+        font-size: 1.05rem;
+        font-weight: 700;
+    }
+
+        .login-shell .brand-mark::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 4px;
+            background: var(--tricolore);
+        }
+
+    .login-shell .brand-text {
+        font-family: var(--font-display);
+        font-size: 1.45rem;
+        font-weight: 700;
+        letter-spacing: .01em;
+    }
+
+    .stage-body {
+        position: relative;
+        max-width: 520px;
+    }
+
+    .stage-eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+        color: #8D9CBC;
+        font-size: .8rem;
+        font-weight: 600;
+    }
+
+        .stage-eyebrow::before {
+            content: "";
+            width: 30px;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--tricolore);
+        }
+
+    .stage-title {
+        margin: 0 0 14px;
+        color: #fff;
+        font-family: var(--font-display);
+        font-size: clamp(2.6rem, 5vw, 4.2rem);
+        font-weight: 700;
+        line-height: .98;
+        letter-spacing: -.005em;
+    }
+
+        .stage-title em {
+            font-style: normal;
+            color: #8FB4FF;
+        }
+
+    .stage-desc {
+        margin: 0;
+        max-width: 440px;
+        color: #A9B7D3;
+        font-size: 1.02rem;
+    }
+
+    .login-shell .scoreboard {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 14px;
+        max-width: 420px;
+        margin-top: 34px;
+        padding: 14px 18px;
+        border: 1px solid rgba(255, 255, 255, .1);
+        border-radius: var(--radius);
+        background: rgba(8, 21, 48, .55);
+    }
+
+    .sb-team {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #fff;
+        font-weight: 600;
+    }
+
+        .sb-team:last-child {
+            justify-content: flex-end;
+        }
+
+    .login-shell .crest {
+        display: inline-grid;
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(180deg, var(--a) 0 70%, var(--b) 70% 100%);
+        color: #fff;
+        font-family: var(--font-display);
+        font-size: .72rem;
+        font-weight: 700;
+        padding-bottom: 3px;
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .25);
+    }
+
+    .sb-score {
+        font-family: var(--font-display);
+        font-size: 1.9rem;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+    }
+
+        .sb-score small {
+            display: block;
+            margin-top: 4px;
+            color: #7F8EAE;
+            font-family: var(--font-body);
+            font-size: .7rem;
+            font-weight: 600;
+        }
+
+    .stage-foot {
+        position: relative;
+        color: #7F8EAE;
+        font-size: .8rem;
+    }
+
+    .login-panel {
+        display: grid;
+        place-items: center;
+        padding: 32px 24px;
+    }
+
+    .login-card {
+        position: relative;
+        overflow: hidden;
+        width: min(420px, 100%);
+        padding: 34px 32px 28px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--white);
+        box-shadow: 0 18px 44px rgba(8, 21, 48, .08);
+    }
+
+        .login-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--tricolore);
+        }
+
+    .login-shell .card-eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 6px;
+        color: var(--muted);
+        font-size: .8rem;
+        font-weight: 600;
+    }
+
+        .login-shell .card-eyebrow::before {
+            content: "";
+            width: 30px;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--tricolore-light);
+        }
+
+    .login-shell .card-title {
+        margin: 0;
+        font-family: var(--font-display);
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 1.1;
+    }
+
+    .login-shell .card-desc {
+        margin: 4px 0 22px;
+        color: var(--muted);
+    }
+
+    .login-shell .form-alert {
+        display: none;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 16px;
+        padding: 10px 12px;
+        border: 1px solid #F3C0C8;
+        border-radius: var(--radius-sm);
+        background: var(--it-red-soft);
+        color: #9E2436;
+        font-size: .85rem;
+        font-weight: 500;
+    }
+
+        .login-shell .form-alert .icon {
+            width: 16px;
+            height: 16px;
+            margin-top: 1px;
+        }
+
+        .login-shell .form-alert.is-visible {
+            display: flex;
+        }
+
+    .login-shell .form-field {
+        margin-bottom: 16px;
+    }
+
+    .login-shell .field-label {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--text-2);
+        font-size: .8rem;
+        font-weight: 600;
+    }
+
+    .login-shell .input-icon {
+        position: relative;
+    }
+
+        .login-shell .input-icon > .icon {
+            position: absolute;
+            top: 50%;
+            left: 12px;
+            width: 16px;
+            height: 16px;
+            transform: translateY(-50%);
+            color: var(--dim);
+            pointer-events: none;
+        }
+
+    .login-shell .input-a {
+        width: 100%;
+        height: 44px;
+        padding: 0 12px 0 36px;
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius-sm);
+        background: var(--white);
+        color: var(--text);
+        font: inherit;
+    }
+
+        .login-shell .input-a::placeholder {
+            color: var(--dim);
+        }
+
+        .login-shell .input-a:focus {
+            outline: none;
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(30, 91, 216, .15);
+        }
+
+    .login-shell .input-a--pw {
+        padding-right: 44px;
+    }
+
+    .login-shell .pw-toggle {
+        position: absolute;
+        top: 50%;
+        right: 4px;
+        display: grid;
+        place-items: center;
+        width: 36px;
+        height: 36px;
+        transform: translateY(-50%);
+        border: 0;
+        border-radius: 7px;
+        background: transparent;
+        color: var(--muted);
+        cursor: pointer;
+    }
+
+        .login-shell .pw-toggle:hover {
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .login-shell .pw-toggle:focus-visible {
+            outline: 2px solid var(--blue);
+            outline-offset: 1px;
+        }
+
+        .login-shell .pw-toggle .icon {
+            width: 18px;
+            height: 18px;
+        }
+
+    .login-shell .field-error {
+        display: none;
+        margin: 5px 0 0;
+        color: var(--it-red);
+        font-size: .8rem;
+        font-weight: 500;
+    }
+
+    .login-shell .form-field.has-error .input-a {
+        border-color: var(--it-red);
+        box-shadow: 0 0 0 3px rgba(206, 43, 55, .12);
+    }
+
+    .login-shell .form-field.has-error .field-error {
+        display: block;
+    }
+
+    .login-shell .form-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 2px 0 20px;
+        font-size: .85rem;
+    }
+
+    .login-shell .check {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--text-2);
+        cursor: pointer;
+    }
+
+        .login-shell .check input {
+            width: 16px;
+            height: 16px;
+            margin: 0;
+            accent-color: var(--blue);
+        }
+
+    .login-shell .link {
+        color: var(--blue);
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+        .login-shell .link:hover {
+            color: var(--blue-hover);
+            text-decoration: underline;
+        }
+
+        .login-shell .link:focus-visible, .login-shell .check input:focus-visible {
+            outline: 2px solid var(--blue);
+            outline-offset: 2px;
+            border-radius: 3px;
+        }
+
+    .login-shell .btn-a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        height: 44px;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        background: var(--blue);
+        color: #fff;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color .12s ease;
+    }
+
+        .login-shell .btn-a:hover {
+            background: var(--blue-hover);
+        }
+
+        .login-shell .btn-a:focus-visible {
+            outline: 2px solid var(--blue);
+            outline-offset: 2px;
+        }
+
+        .login-shell .btn-a[disabled] {
+            opacity: .7;
+            cursor: progress;
+        }
+
+    .login-shell .card-foot {
+        margin: 22px 0 0;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+        color: var(--dim);
+        font-size: .8rem;
+        text-align: center;
+    }
+
+    @@media (max-width: 880px) {
+        .login-shell { grid-template-columns: 1fr; }
+
+        .login-stage {
+            min-height: 0;
+            gap: 20px;
+            padding: 28px 24px 56px;
+        }
+
+        .stage-title { font-size: 2.4rem; }
+        .login-shell .scoreboard, .stage-foot, .stage-desc { display: none; }
+        .login-shell .pitch { width: 560px; right: -30%; bottom: -30%; }
+
+        .login-panel { margin-top: -32px; padding-top: 0; }
+    }
+
+    @@media (max-width: 420px) {
+        .login-card { padding: 28px 20px 22px; }
+    }
+
+    @@media (prefers-reduced-motion: no-preference) {
+        .login-card { animation: card-in .35s ease-out both; }
+        @@keyframes card-in {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: none; }
+        }
     }
 </style>

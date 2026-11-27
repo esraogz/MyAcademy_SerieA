@@ -1,0 +1,151 @@
+﻿@model LoginDto
+@{
+    Layout = null;
+}
+<partial name="AdminPartial/_AdminHeadPartial" />
+<partial name="AdminPartial/_AdminIconSetPartial" />
+
+<main class="login-shell">
+
+        <!-- ===== Sol: sahne ===== -->
+        <section class="login-stage" aria-label="Serie A Admin tanıtım">
+            <!-- Saha çizgileri: sidebar'daki desenin büyük hali -->
+            <svg class="pitch" viewBox="0 0 400 560" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                <rect x="20" y="20" width="360" height="520" rx="3" />
+                <path d="M20 280h360" />
+                <circle cx="200" cy="280" r="70" />
+                <circle cx="200" cy="280" r="4" fill="currentColor" />
+                <rect x="110" y="20" width="180" height="84" />
+                <rect x="155" y="20" width="90" height="34" />
+                <rect x="110" y="456" width="180" height="84" />
+                <rect x="155" y="506" width="90" height="34" />
+                <path d="M150 104a60 60 0 0 0 100 0M150 456a60 60 0 0 1 100 0" />
+            </svg>
+
+            <a class="login-brand" href="#">
+                <span class="brand-mark" aria-hidden="true">SA</span>
+                <span class="brand-text">Serie A Admin</span>
+            </a>
+
+            <div class="stage-body">
+                <p class="stage-eyebrow">Yönetim paneli</p>
+                <h1 class="stage-title">Fikstür, skor ve <em>puan durumu</em> tek yerde.</h1>
+                <p class="stage-desc">Takımları, maçları ve gol-kart-oyuncu değişikliklerini buradan yönet. Puan durumu maç sonuçlarından otomatik hesaplanır.</p>
+
+                <!-- Örnek maç kartı (süs; gerçek veriye bağlı değil) -->
+                <div class="scoreboard" aria-hidden="true">
+                    <span class="sb-team"><span class="crest" style="--a:#0A5BA8;--b:#101820">INT</span>Inter</span>
+                    <span class="sb-score">2 – 1<small>Maç sonu</small></span>
+                    <span class="sb-team">Milan<span class="crest" style="--a:#C8102E;--b:#101820">MIL</span></span>
+                </div>
+            </div>
+
+            <p class="stage-foot">Sezon 2026/27</p>
+        </section>
+
+        <!-- ===== Sağ: giriş formu ===== -->
+        <section class="login-panel">
+            <div class="login-card">
+                <p class="card-eyebrow">Giriş</p>
+                <h2 class="card-title">Yönetici girişi</h2>
+                <p class="card-desc">E-posta ve şifrenle panele gir.</p>
+
+                <!--
+                    cshtml karşılığı:
+                    <form asp-area="Admin" asp-controller="Account" asp-action="Login" method="post" novalidate>
+                        <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+                    Hata mesajı (API/iş kuralı): ViewBag.ApiError varsa aşağıdaki .form-alert'e "is-visible" ekle.
+                -->
+            <div class="form-alert @(ViewBag.ApiError != null ? "is-visible" : "")" id="login-alert" role="alert">
+                    <svg class="icon" aria-hidden="true"><use href="#i-info" /></svg>
+                    <span id="login-alert-text">@ViewBag.ApiError</span>
+                </div>
+
+                <form id="login-form" asp-controller="Auth" asp-action ="Login" method="post" novalidate>
+                    @* <!-- @Html.AntiForgeryToken() --> *@
+
+                    <div class="form-field" id="f-email">
+                        <label class="field-label" for="Email">E-posta</label>
+                        <div class="input-icon">
+                            <svg class="icon" aria-hidden="true"><use href="#i-mail" /></svg>
+                            <!-- <input asp-for="Email" ... /> -->
+                            <input class="input-a" type="email" id="Email" name="Email" autocomplete="username" placeholder="ad@kulup.com" required aria-describedby="Email-error">
+                        </div>
+                        <p class="field-error" id="Email-error"><!-- <span asp-validation-for="Email"></span> -->Geçerli bir e-posta adresi gir.</p>
+                    </div>
+
+                    <div class="form-field" id="f-password">
+                        <label class="field-label" for="Password">Şifre</label>
+                        <div class="input-icon">
+                            <svg class="icon" aria-hidden="true"><use href="#i-lock" /></svg>
+                            <!-- <input asp-for="Password" ... /> -->
+                            <input class="input-a input-a--pw" type="password" id="Password" name="Password" autocomplete="current-password" placeholder="Şifren" required aria-describedby="Password-error">
+                            <button type="button" class="pw-toggle" id="pw-toggle" aria-label="Şifreyi göster" aria-pressed="false">
+                                <svg class="icon" aria-hidden="true"><use href="#i-eye" /></svg>
+                            </button>
+                        </div>
+                        <p class="field-error" id="Password-error"><!-- <span asp-validation-for="Password"></span> -->Şifreni gir.</p>
+                    </div>
+
+                    <!--<div class="form-row">
+                        <label class="check">-->
+                            <!-- <input asp-for="RememberMe" /> -->
+                            <!--<input type="checkbox" name="RememberMe" value="true">
+                            Beni hatırla
+                        </label>
+                        <a class="link" href="#">Şifreni mi unuttun?</a>
+                    </div>-->
+
+                    <button type="submit" class="btn-a" id="login-submit">
+                        Panele gir
+                        <svg class="icon" aria-hidden="true"><use href="#i-arrow" /></svg>
+                    </button>
+                </form>
+
+                <p class="card-foot">Hesabın yoksa sistem yöneticine başvur.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+    
+        (function () {
+            var form = document.getElementById('login-form');
+            var email = document.getElementById('Email');
+            var pw = document.getElementById('Password');
+            var toggle = document.getElementById('pw-toggle');
+            var alertBox = document.getElementById('login-alert');
+
+            toggle.addEventListener('click', function () {
+                var show = pw.type === 'password';
+                pw.type = show ? 'text' : 'password';
+                toggle.setAttribute('aria-pressed', String(show));
+                toggle.setAttribute('aria-label', show ? 'Şifreyi gizle' : 'Şifreyi göster');
+                toggle.querySelector('use').setAttribute('href', show ? '#i-eye-off' : '#i-eye');
+            });
+
+            function mark(field, bad) {
+                document.getElementById(field).classList.toggle('has-error', bad);
+            }
+
+            form.addEventListener('submit', function (e) {
+                var badEmail = !/^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/.test(email.value.trim());
+                var badPw = pw.value.length === 0;
+                mark('f-email', badEmail);
+                mark('f-password', badPw);
+                alertBox.classList.remove('is-visible');
+                if (badEmail || badPw) {
+                    e.preventDefault();
+                    (badEmail ? email : pw).focus();
+                }
+                // Hatalı giriş örneği (önizleme): alertBox.classList.add('is-visible');
+                // document.getElementById('login-alert-text').textContent = 'E-posta veya şifre hatalı.';
+            });
+
+            [email, pw].forEach(function (el) {
+                el.addEventListener('input', function () {
+                    mark(el === email ? 'f-email' : 'f-password', false);
+                });
+            });
+        })();
+    </script>

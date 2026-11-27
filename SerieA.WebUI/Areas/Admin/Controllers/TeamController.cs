@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SerieA.WebUI.DTOs.TeamDtos;
 using SerieA.WebUI.Extensions;
 using SerieA.WebUI.Services;
@@ -7,6 +8,7 @@ using SerieA.WebUI.Services.TeamServices;
 namespace SerieA.WebUI.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,Editor")]
     public class TeamController(ITeamService _teamService,
                                 TeamViewModelService _teamViewModelService) : Controller
     {

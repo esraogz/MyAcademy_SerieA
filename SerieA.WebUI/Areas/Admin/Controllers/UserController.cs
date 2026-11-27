@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SerieA.WebUI.DTOs.UserDtos;
 using SerieA.WebUI.Extensions;
 using SerieA.WebUI.Services.Users;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 namespace SerieA.WebUI.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class UserController(IUserService _userService) : Controller
     {
         [HttpGet]

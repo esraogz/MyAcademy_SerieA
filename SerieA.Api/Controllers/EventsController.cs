@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SerieA.WebApi.DTOs.MatchEventItemDtos;
 using SerieA.WebApi.Services.Events;
-using System.Threading.Tasks;
 
 namespace SerieA.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin,Editor")]
     public class EventsController(IEventService _eventService) : ControllerBase
     {
         [HttpPost("CreateEvent")]

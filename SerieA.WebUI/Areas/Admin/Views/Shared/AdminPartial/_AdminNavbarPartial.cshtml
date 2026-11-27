@@ -17,7 +17,10 @@
         </button>
         <div class="topbar-user">
             <span class="avatar"><svg class="icon" aria-hidden="true"><use href="#i-user" /></svg></span>
-            <span class="topbar-user__text"><span class="topbar-user__name">Yönetici</span><span class="topbar-user__role">Tam yetkili</span></span>
+            <span class="topbar-user__text">
+                <span class="topbar-user__name">@(User.Identity?.Name ?? "Yönetici")</span>
+                <span class="topbar-user__role">@(User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value ?? "Yetkili")</span>
+            </span>
         </div>
     </div>
 </header>

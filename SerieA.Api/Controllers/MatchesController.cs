@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SerieA.WebApi.Entities;
 using SerieA.WebApi.Context;
 using SerieA.WebApi.DTOs.MatchDtos;
 using SerieA.WebApi.DTOs.TeamDtos;
+using SerieA.WebApi.Entities;
 using SerieA.WebApi.Services.Matches;
 using System.Threading.Tasks;
 
@@ -12,6 +13,7 @@ namespace SerieA.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin,Editor")]
     public class MatchesController(IMatchService _matchService) : ControllerBase
     {
         [HttpGet("ListGetAllMatches")]

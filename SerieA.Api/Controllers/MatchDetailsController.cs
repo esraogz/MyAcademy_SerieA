@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 using SerieA.WebApi.Services.MatchDetails;
@@ -8,6 +9,7 @@ namespace SerieA.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin,Editor")]
     public class MatchDetailsController(IMatchDetailService _matchDetailService) : ControllerBase
     {
        [HttpGet("GetDetail/{id}")]

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SerieA.WebApi.DTOs.TeamDtos;
 using SerieA.WebApi.Services.Teams;
 
@@ -6,6 +7,7 @@ namespace SerieA.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin,Editor")]
     public class TeamsController(ITeamService _teamService) : ControllerBase
     {
         [HttpGet()]

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SerieA.WebApi.DTOs.UserDtos;
 using SerieA.WebApi.Services.Users;
@@ -8,6 +9,7 @@ namespace SerieA.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class UsersController(IUserService _userService) : ControllerBase
     {
         [HttpGet]
