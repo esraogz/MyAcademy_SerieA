@@ -19,32 +19,32 @@
     </div>
 
     <section class="card-a" aria-label="Kullanıcı listesi">
-        <form method="get" class="filter-bar">
+        <form asp-controller="User" asp-action="ListUser" method="get" class="filter-bar">
             <div class="filter-search">
                 <label class="field-label" for="f-q">Kullanıcı Ara</label>
                 <div class="input-icon">
                     <svg class="icon" aria-hidden="true"><use href="#i-search" /></svg>
-                    <input class="input-a" id="f-q" name="search" type="search" placeholder="Ad veya e-posta">
+                    <input class="input-a" id="f-q" name="search" value="@ViewBag.CurrentSearch" type="search" placeholder="Ad veya e-posta">
                 </div>
             </div>
             <div>
                 <label class="field-label" for="f-role">Rol</label>
                 <select class="select-a" id="f-role" name="role">
                     <option value="">Tüm Roller</option>
-                    <option value="Admin">Admin</option>
-                    <option value="Editör">Editör</option>
+                    <option value="Admin" selected="@(ViewBag.CurrentRole == "Admin")">Admin</option>
+                    <option value="Editor" selected="@(ViewBag.CurrentRole == "Editor")">Editör</option>
                 </select>
             </div>
             <div>
                 <label class="field-label" for="f-status">Durum</label>
                 <select class="select-a" id="f-status" name="status">
                     <option value="">Tümü</option>
-                    <option value="active">Aktif</option>
-                    <option value="inactive">Pasif</option>
+                    <option value="active" selected="@(ViewBag.CurrentStatus == "active")">Aktif</option>
+                    <option value="inactive" selected="@(ViewBag.CurrentStatus == "inactive")">Pasif</option>
                 </select>
             </div>
             <div class="filter-actions">
-                <a href="users.html" class="btn-a btn-a--ghost">Temizle</a>
+                <a asp-area="Admin" asp-controller="User" asp-action="ListUser" class="btn-a btn-a--ghost" style="text-decoration:none;">Temizle</a>
                 <button type="submit" class="btn-a btn-a--secondary">Filtrele</button>
             </div>
         </form>

@@ -25,7 +25,7 @@
             <label class="field-label" for="f-team">Takım Ara</label>
             <div class="input-icon">
                 <svg class="icon"><use href="#i-search" /></svg>
-                <input class="input-a" id="f-team" name="team" type="search" placeholder="Takım adı yazın...">
+                <input class="input-a" id="f-team" name="team" value="@ViewBag.CurrentTeam" type="search" placeholder="Takım adı yazın...">
             </div>
         </div>
         <div>
@@ -34,7 +34,7 @@
                 <option value="">Tüm Haftalar</option>
                 @for (int i = 1; i <= 38; i++)
                 {
-                    <option value="@i">@i. Hafta</option>
+                    <option value="@i" selected="@(ViewBag.CurrentWeek == i)">@i. Hafta</option>
                 }
             </select>
         </div>
@@ -42,10 +42,10 @@
             <label class="field-label" for="f-status">Durum</label>
             <select class="select-a" id="f-status" name="status">
                 <option value="">Tümü</option>
-                <option value="NotStarted">Başlamadı</option>
-                <option value="Live">Canlı</option>
-                <option value="Finished">Tamamlandı</option>
-                <option value="Postponed">Ertelendi</option>
+                <option value="NotStarted" selected="@(ViewBag.CurrentStatus == "NotStarted")">Başlamadı</option>
+                <option value="Live" selected="@(ViewBag.CurrentStatus == "Live")">Canlı</option>
+                <option value="Finished" selected="@(ViewBag.CurrentStatus == "Finished")">Tamamlandı</option>
+                <option value="Postponed" selected="@(ViewBag.CurrentStatus == "Postponed")">Ertelendi</option>
             </select>
         </div>
         <div class="filter-actions">

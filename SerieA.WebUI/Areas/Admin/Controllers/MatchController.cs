@@ -13,12 +13,36 @@ namespace SerieA.WebUI.Areas.Admin.Controllers
     public class MatchController(IMatchService _matchService,
                                  ITeamService _teamService) : Controller
     {
-        public async Task<IActionResult> ListMatch()
+        public async Task<IActionResult> ListMatch(string? team, int? week, string? status)
         {
             var matches = await _matchService.GetAllMatchesAsync();
             var teams = await _teamService.GetAllTeamsAsync();
-            ViewBag.Teams = teams.Where(x =>x.IsActive).ToList();
-            return View(matches);
+            ViewBag.Teams = teams.Where(x => x.IsActive).ToList();
+
+            ViewBag.CurrentTeam = team;
+            ViewBag.CurrentWeek = week;
+            ViewBag.CurrentStatus = status;
+
+            var query = matches.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(team))
+            {
+                var searchLower = team.Trim().ToLower();
+                query = query.Where(x => x.HomeTeamName.ToLower().Contains(searchLower) ||
+                                         x.AwayTeamName.ToLower().Contains(searchLower));
+            }
+
+            if (week.HasValue)
+            {
+                query = query.Where(x => x.Week == week.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(status))
+            {
+                query = query.Where(x => x.Status == status);
+            }
+
+            return View(query.ToList());
         }
 
         [HttpPost]

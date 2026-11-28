@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SerieA.WebUI.DTOs.UserDtos;
 using SerieA.WebUI.Extensions;
 using SerieA.WebUI.Services.Users;
+using System.Data;
 using System.Threading.Tasks;
 
 namespace SerieA.WebUI.Areas.Admin.Controllers
@@ -12,11 +13,43 @@ namespace SerieA.WebUI.Areas.Admin.Controllers
     public class UserController(IUserService _userService) : Controller
     {
         [HttpGet]
-        public async Task<IActionResult> ListUser()
+        public async Task<IActionResult> ListUser(string? search, string? role, string? status)
         {
             var users = await _userService.GetAllUserAsync();
             ViewBag.Roles = await _userService.GetRolesAsync();
-            return View(users);
+
+            ViewBag.CurrentSearch = search;
+            ViewBag.CurrentRole = role;
+            ViewBag.CurrentStatus = status;
+
+            var query = users.AsQueryable();
+
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                var searchName = search.Trim().ToLower();
+                query = query.Where(x => (x.FirstName + " " + x.LastName).Contains(searchName) || x.Email.ToLower().Contains(searchName));
+            }
+
+            if (!string.IsNullOrEmpty(role))
+            {
+                query = query.Where(x => x.Roles.Contains(role));
+            }
+
+            if (!string.IsNullOrEmpty(status))
+            {
+                if (status == "active")
+                {
+                    query = query.Where(x => x.IsActive);
+                }
+                else if (status == "inactive")
+                {
+                    query = query.Where(x => !x.IsActive);
+                }
+            }
+
+
+            return View(query.ToList());
         }
 
         [HttpPost]
@@ -47,7 +80,7 @@ namespace SerieA.WebUI.Areas.Admin.Controllers
             return RedirectToAction(nameof(ListUser));
         }
 
-        
+
         public async Task<IActionResult> DeleteUser(int id)
         {
             var result = await _userService.DeleteUserAsync(id);
